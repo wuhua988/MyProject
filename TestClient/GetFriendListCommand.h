@@ -10,15 +10,15 @@ class GetFriendListCommand : public CliCmd
 public:
     GetFriendListCommand();
     GetFriendListCommand(Framework* pFramework);
-	~GetFriendListCommand();
-	
-	virtual void OnTimer();
-	virtual bool SendRequest();
+    ~GetFriendListCommand();
+    
+    virtual void OnTimer();
+    virtual bool SendRequest();
     virtual void OnResponse(MsgBlock* pMsgBlock);
-	void SetParam(UInt64 version_id,UInt64 user_id);
+    void SetParam(UInt64 version_id,UInt64 user_id);
 private:
-	UInt64 m_version_id;
-	UInt64 m_user_id;
+    UInt64 m_version_id;
+    UInt64 m_user_id;
 };
 
 #endif //__GetFriendListCommand_h__

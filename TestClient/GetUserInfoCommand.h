@@ -10,14 +10,14 @@ class GetUserInfoCommand : public CliCmd
 public:
     GetUserInfoCommand();
     GetUserInfoCommand(Framework* pFramework);
-	~GetUserInfoCommand();
-	
-	virtual void OnTimer();
-	virtual bool SendRequest();
+    ~GetUserInfoCommand();
+    
+    virtual void OnTimer();
+    virtual bool SendRequest();
     virtual void OnResponse(MsgBlock* pMsgBlock);
-	void SetParam(UInt64 user_id);
+    void SetParam(UInt64 user_id);
 private:
-	UInt64 m_user_id;
+    UInt64 m_user_id;
 };
 
 #endif //__GetUserInfoCommand_h__

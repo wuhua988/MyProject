@@ -5,7 +5,7 @@ class TestCliFramework : public Framework
 {
 public:
     TestCliFramework(){}
-	~TestCliFramework(){}
+    ~TestCliFramework(){}
     virtual void OnMessage(MsgBlock* pMsgBlock);
     virtual int OnConnCreated(ConnInfo* pConnInfo);   
     virtual int OnFailConnect(ConnInfo* pConnInfo);

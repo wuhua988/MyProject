@@ -11,12 +11,12 @@ class GetUserStateCommand : public CliCmd
 public:
     GetUserStateCommand();
     GetUserStateCommand(Framework* pFramework);
-	virtual ~GetUserStateCommand();
-	
-	virtual void OnTimer();
-	virtual bool SendRequest();
+    virtual ~GetUserStateCommand();
+    
+    virtual void OnTimer();
+    virtual bool SendRequest();
     virtual void OnResponse(MsgBlock* pMsgBlock);
-	void SetParam(const std::vector<UInt64>& user_list);
+    void SetParam(const std::vector<UInt64>& user_list);
 private:
     std::vector<UInt64> m_user_list;
 };
