@@ -1,0 +1,7 @@
+package App;
+
+message EchoRequest      
+{
+	optional string name = 2;                                
+	optional string msg = 3;                              
+}
