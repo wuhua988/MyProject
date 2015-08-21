@@ -1,0 +1,15 @@
+package tt_im_group;
+
+enum GroupType
+{
+	GENERIC_GROUP_TYPE = 0;//IM聊天群
+	COMPERE_GROUP_TYPE = 1;//主播群（直播通知）
+	FOUCS_GROUP_TYPE = 2;//关注群（TT好友关注）
+	FREE_GROUP_TYPE = 0X7FFFFFFF;//消息分发服务内部使用
+}
+
+message GroupId
+{
+	required uint64 number = 1;
+	required GroupType type = 2;
+}

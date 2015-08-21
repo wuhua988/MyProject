@@ -1,0 +1,744 @@
+package umsProtocol;
+
+// 执行结果，被其他响应使用
+message Result
+{
+	required uint32 code = 1;   // 错误代码 0成功，1失败
+	required string msg = 2;	// 错误描述
+}
+
+// 用户认证请求 0x4001
+message AuthUserRequest
+{
+	optional string login_name = 1;   // 登录帐号 快速登录时为选填项，其余为必填项
+	optional string password = 2;     // 密码 快速登录时为选填项，其余为必填项
+	required uint32 terminal_type = 3; // 终端类型 - web-1；安卓手机-2；IOS手机-3；安卓pad-4；IOSpad-5；PC客户端-6
+	optional string mac_addr = 4;      // MAC地址
+    optional uint32 login_type = 5;	   // 登录账号类型 账号登录[0]/TT号登录[1]/手机登录[2]/邮箱登录[3]/靓号登录[4]  、token快速登录[5]
+	optional string user_ip = 6;    //登录用户的ip地址 
+	optional uint64 user_id = 7; //用户ID 快速登录时为必填项，其他登录时为非必填项
+	optional string token = 8; //用户token 快速登录时为必填项，其他登录时为非必填项
+}
+// 用户认证响应
+message AuthUserResponse
+{
+	required Result result = 1;	   // 响应结果
+	optional uint64 user_id = 2;   // 用户ID
+	optional uint64 tt_number = 3; // TT号
+	optional string nick_name = 4; // 用户昵称
+	optional string avatar_id = 5; // 用户头像ID
+	optional string avatar = 6;	   // 用户自定义头像
+	optional string token = 7;	   // 登录令牌
+}
+
+// 用户退出请求 0x4002
+message QuitUserRequest
+{                                      // 
+	required uint64 user_id = 1;	   // 用户ID
+	required uint32 terminal_type = 2; // 终端类型
+	required string token  = 3; //令牌
+}
+// 用户退出响应
+message QuitUserResponse
+{
+	required Result result = 2;
+	optional uint64 user_id = 1;
+}
+
+
+// 取好友列表请求 0x4003
+message GetFriendListRequest
+{
+	required uint64 user_id = 1; //用户ID
+	optional uint64 version_id = 2; //好友列表的版本信息，如果是第一次访问，为0。用户好友增删时，版本自动加1
+}
+
+// 取好友列表响应
+message GetFriendListResponse 
+{
+	required Result result = 1; //响应结果
+	optional uint64 user_id = 2;			 // 用户ID
+	optional uint64 version_id = 3; 	//好友列表的版本信息
+	repeated uint64 friend_id = 4; 	//好友列表（只包括用户id）
+}
+
+// 取用户信息请求 0x4004
+message GetUserInfoRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+}
+// 取用户信息响应 
+message GetUserInfoResponse
+{
+	optional uint64 user_id = 1;		// 用户ID
+	optional uint64 tt_number = 2;		// TT号
+	optional string user_name = 3;		// 用户名
+	optional string nick_name = 4;		// 昵称
+	optional uint32 sex = 5;			// 性别
+	optional string mobile = 6;			// 手机
+	optional string birthday = 7;		// 生日
+	optional string email = 8;			// Email
+	optional uint32 user_grade = 9;		// 用户等级
+	optional uint32 age = 10;			// 年龄
+	optional uint32 constellation = 11;	// 星座
+	optional string sign = 12;			// 个性签名
+	optional string like = 13;	// 喜欢
+	optional string city = 14;			// 城市 - 所在地
+	optional string personal_desc = 15;	// 个人说明
+	optional string real_name = 16;		// 真实姓名
+    optional uint64 friend_id = 17;     // 获取谁的
+	required Result result = 18; //响应结果
+}
+
+// 取好友详细信息请求 0x4005
+message GetFriendInfoRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+    required uint64 friend_id = 2; // 获取谁的
+}
+// 取好友详细信息响应
+message GetFriendInfoResponse
+{
+	optional uint64 user_id = 1;		// 用户ID
+	optional uint64 tt_number = 2;		// TT号
+	optional string user_name = 3;		// 用户名
+	optional string nick_name = 4;		// 昵称
+	optional uint32 sex = 5;			// 性别
+	optional string mobile = 6;			// 手机
+	optional string birthday = 7;		// 生日
+	optional string email = 8;			// Email
+	optional uint32 user_grade = 9;		// 用户等级
+	optional uint32 age = 10;			// 年龄
+	optional uint32 constellation = 11;	// 星座
+	optional string sign = 12;			// 个性签名
+	optional string like = 13;	// 喜欢
+	optional string city = 14;			// 城市 - 所在地
+	optional string personal_desc = 15;	// 个人说明
+	optional string real_name = 16;		// 真实姓名
+    optional uint64 friend_id = 17;     // 获取谁的
+	required Result result = 18; //响应结果
+}
+
+// 取群列表请求 0x4006
+message GetGroupListRequest
+{
+	required uint64 user_id = 1; // 用户ID
+}
+//群列表项
+message GroupListItem
+{
+	required uint64 group_id = 1;	// 群ID
+	optional string group_name = 2; // 群名称
+	optional string remark = 3;		// 群备注
+    optional uint32 avatar_id = 4;  // 群头像ID
+	optional string avatar = 5;		// 群自定义头像
+}
+// 取群列表响应
+message GetGroupListResponse
+{
+	optional uint64 user_id = 1;		   // 用户ID
+	repeated GroupListItem group_item = 2; // 群列表
+	required Result result = 3; //响应结果
+}
+
+// 创建群请求 0x4007
+message CreateGroupRequest
+{
+	required uint64 user_id = 1;	 // 用户ID
+	required string group_name = 2;	 // 群名称
+	optional uint32 group_type = 3;	 // 群类型
+	optional string group_icon = 4;	 // 群图标
+	optional uint32 verify_type = 5; // 群验证类型
+	optional string group_intro = 6; // 群简介
+	optional string group_sign = 7;	 // 群公告
+	optional uint32 sub_type = 8;	 // 群子类型
+	optional uint32 avatar_id = 9;	 // 群头像ID
+}
+// 创建群响应
+message CreateGroupResponse
+{
+    required Result result = 1;       // 响应结果
+	optional uint64 user_id = 2;	  // 用户ID
+	optional uint64 group_id = 3;	  // 群ID
+	optional uint32 gorup_number = 4; // 新群号
+}
+
+// 加入群请求（通知转发服务器）0x4008
+message JoinGroupRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+// 加入群响应 
+message JoinGroupResponse
+{
+    optional uint64 user_id = 1;  // 用户ID
+    optional uint64 group_id = 2; // 群ID
+	required Result result = 4; //响应结果
+}
+
+// 退出群请求（通知转发服务器） 0x4009
+message ExitGroupRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+// 退出群响应
+message ExitGroupResponse
+{
+	required Result result = 1;
+}
+
+// 取群成员列表请求 0x400a
+message GetGroupUserListRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+// 取群成员列表响应
+message GetGroupUserListResponse
+{
+	optional uint64 group_id = 1;	  // 群ID
+	optional uint32 sum_num = 2;	// 群成员总数
+    repeated uint64 group_user_id = 3; // 群成员ID列表
+  	required Result result = 4; //响应结果
+}
+
+// 搜索群成员请求(群名片和昵称中搜索） 0x400b
+message SearchGroupUserListRequest
+{
+	required uint64 group_id = 1; // 群ID
+	required string search_string = 2;//搜索字符串
+}
+// 群成员列表项 
+message GroupUserListItem
+{
+	required uint64 user_id = 1;   // 用户ID
+	optional string nick_name = 2; // 昵称
+	optional uint32 avatar_id = 3;    // 头像ID
+    optional string avatar = 4;       // 用户自定义头像
+    optional uint32 role    = 5;      //用户角色 0-群主 1-管理员  2-普通用户
+}
+// 搜索群成员响应
+message SearchGroupUserListResponse
+{
+	optional uint64 group_id = 1;			  // 群ID
+	repeated GroupUserListItem list_item = 2; // 群成员列表 - 此项可重复N次
+	required Result result = 3; //响应结果
+}
+
+// 添加好友请求 0x400c
+message AddFriendRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+	required uint64 friend_id = 2; // 好友ID
+}
+// 添加好友响应
+message AddFriendResponse
+{
+	required Result result = 1;
+}
+
+// 获取好友验证信息请求 0x400d
+message GetFriendVerifyInfoRequest
+{
+	required uint64 user_id = 1;    //发送者ID
+}
+// 获取好友验证信息响应
+message GetFriendVerifyInfoResponse
+{
+	optional uint32 verify_type = 1; // 验证类型(1-验证身份，2-拒绝任何人添加，3-允许任何人添加，4-回答问题)
+	optional uint32 question_type = 2; // 问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+	optional string answer = 3;//验证问题的答案
+	required Result result = 4; //响应结果
+}
+
+//删除好友请求 0x400e
+message DeleteFriendRequest
+{
+    required uint64 user_id = 1;   // 操作者ID
+    required uint64 friend_id = 2; // 被操作者ID
+}
+//删除好友响应
+message DeleteFriendResponse
+{
+	required Result result=1;
+}
+
+//修改好友所在分组请求  0x400f
+message UpdateFriendBranchRequest
+{
+    required uint64 user_id = 1;   //操作者ID
+    required uint64 friend_id = 2; //好友ID
+    required uint64 branch_id = 3; //目标分组
+}
+//修改好友所在分组响应
+message UpdateFriendBranchResponse
+{
+	required Result result = 1;
+}
+
+// 好友分组管理
+// 添加好友分组请求 0x4010
+message AddBranchRequest
+{
+    required uint64 user_id = 1;     // 用户ID
+    optional string branch_name = 2; // 分组名称
+    optional uint32 branch_sort = 3; // 分组排序
+}
+// 添加好友分组响应
+message AddBranchResponse
+{
+    optional uint64 user_id = 1;     // 用户ID
+    optional uint64 branch_id = 2;   // 分组ID
+    optional string branch_name = 3; // 分组名称
+    optional uint32 branch_sort = 4; // 分组排序
+	required Result result = 5; //响应结果
+}
+
+// 删除好友分组请求 0x4011
+message DeleteBranchRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 branch_id = 2; // 分组ID
+}
+//删除好友分组响应
+message DeleteBranchResponse
+{
+	required Result result = 1;//响应结果
+}
+
+// 修改好友分组信息请求 0x4012
+message UpdateBranchInfoRequest
+{
+    required uint64 user_id = 1;     // 用户ID
+    optional uint64 branch_id = 2;   // 分组ID
+    optional string branch_name = 3; // 分组名称
+    optional uint32 branch_sort = 4; // 分组排序
+}
+//修改好友分组信息响应
+message UpdateBranchInfoResponse
+{
+	required Result result = 1;
+}
+
+// 踢用户出群请求（通知转发服务器）0x4013
+message KickoutGroupUserRequest
+{
+    required uint64 user_id = 1;       // 用户ID
+	required uint64 group_id = 2;          //群ID
+    optional uint64 group_user_id = 3; // 被操作者ID
+}
+//踢用户出群响应
+message KickoutGroupUserResponse
+{
+	required Result result = 1;
+}
+
+// 设置群管理员请求（通知转发服务器） 0x4014
+message SetGroupManagerRequest
+{
+    required uint64 user_id = 1;       // 操作者ID
+    optional uint64 group_id = 2;      // 群ID
+    optional uint64 group_user_id = 3; // 被操作群内用户ID
+    optional uint32 control_value = 4; // 设置值 - 1设置，0取消
+}
+// 设置群管理员响应
+message SetGroupManagerResponse
+{
+	required Result result = 1;
+}
+
+// 修改好友备注请求 0x4015
+message UpdateFriendRemarkRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+	optional uint64 friend_id = 2; // 好友ID
+	optional string remark = 3;    // 备注名称
+}
+// 修改好友备注响应
+message UpdateFriendRemarkResponse
+{
+	required Result result = 1;
+}
+
+// 取好友分组列表请求 0x4016
+message GetBranchListRequest
+{
+	required uint64 user_id = 1;
+	optional uint64 version_id = 2; //好友列表的版本信息，如果是第一次访问，为0。用户好友增删时，版本自动加1
+}
+
+message UserIdRemarkItem
+{
+    required uint64 user_id = 1; //用户ID
+    optional string user_remark = 2; //好友备注姓名
+}
+// 好友分组项数据
+message BranchListItem
+{
+    optional uint64 branch_id = 1;   // 分组ID
+    optional string branch_name = 2; // 分组名称
+    optional uint32 branch_sort = 3; // 分组排序
+    repeated UserIdRemarkItem users = 4; //好友列表
+};
+
+// 取好友分组列表响应
+message GetBranchListResponse
+{
+    required Result result = 1; //响应结果
+	optional uint64 user_id = 2;     // 发送者ID
+	optional uint64 version_id = 3; 	//好友列表的版本信息
+	repeated BranchListItem branch_item = 4; //好友分组信息及好友列表信息
+}
+
+// 设置好友选项请求 0x4017
+message SetFriendOptionRequest
+{
+    required uint64 user_id = 1; // 用户ID
+    optional uint32 verify_type = 2; // 验证类型(1-验证身份，2-拒绝任何人添加，3-达到积分，4-回答问题)
+	optional uint32 question_type = 3; // 设置问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+	optional string answer = 4; // 设置答案
+}
+// 设置好友选项响应
+message SetFriendOptionResponse
+{
+	required Result result = 1;
+}
+
+// 解散群请求（通知转发服务器） 0x4018
+message DeleteGroupRequest
+{
+    required uint64 user_id = 1;  // 操作者ID（群主）
+    optional uint64 group_id = 2; // 群ID
+}
+// 解散群响应
+message DeleteGroupResponse
+{
+	required Result result = 1;
+}
+
+// 设置群用户信息请求（通知转发服务器） 0x4019
+message UpdateGroupUserInfoRequest
+{
+    required uint64 user_id = 1; //操作者用户ID
+    required uint64 group_id = 2; //群ID
+    required uint64 group_user_id = 3; //被操作的用户ID
+    optional string remark = 4; //用户备注信息   
+    optional string group_card = 5; //用户群名片（用于显示，如果群名片为空，显示用户名）
+    optional string email = 6; //用户邮箱
+    optional string tel = 7; //用户电话
+}
+// 设置群用户信息响应
+message UpdateGroupUserInfoResponse
+{
+	required Result result = 1;
+}
+
+// 修改群信息请求（通知转发服务器）0x401a
+message UpdateGroupInfoRequest
+{
+    required uint64 user_id = 1;      // 用户ID
+    required uint64 group_id = 2;     // 群ID
+    optional string group_name = 3;   // 群名称
+    optional string remark = 4;       // 备注
+    optional uint32 type = 5;         // 类型
+    optional string group_intro = 6;  // 群简介
+    optional string group_notice = 7; // 群公告
+	optional string avatar = 8;		  // 群头像
+    optional uint32 sub_type = 9;     // 子类型
+	optional uint32 avatar_id = 10;	 // 群头像ID
+}
+// 修改群信息响应
+message UpdateGroupInfoResponse
+{
+	required Result result = 1;
+}
+
+// 修改群选项请求（通知转发服务器）0x401b
+message UpdateGroupOptionRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+    optional uint32 verify_type = 3; //验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入，4-指定的人员可以加入)
+    optional uint64 channel_id = 4;  //频道ID
+}
+// 修改群选项响应
+message UpdateGroupOptionResponse
+{
+	required Result result = 1;
+}
+
+// 修改群公告请求（通知转发服务器）0x401c
+message UpdateGroupNoticeRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+	optional string notice = 3;  // 群公告内容
+}
+// 修改群公告响应
+message UpdateGroupNoticeResponse
+{
+	required Result result = 1;
+}
+
+// 取群信息请求 0x401d
+message GetGroupInfoRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+}
+// 取群信息响应 
+message GetGroupInfoResponse
+{
+    optional uint64 user_id = 1;  // 用户ID
+    optional uint64 group_id = 2; // 群ID
+    optional string group_name = 3;   // 群名称
+    optional string remark = 4;       // 备注
+    optional uint32 type = 5;         // 类型
+    optional string group_intro = 6;  // 群简介
+    optional string group_notice = 7; // 群公告
+    optional string avatar = 8; //群头像
+	required Result result = 9; //响应结果
+	optional uint32 sub_type = 10;  // 子类型
+	optional uint64 group_number  = 11; //群号
+	optional uint32 avatar_id = 12; //群头像ID
+	optional uint64 owner_id = 13; //群主ID
+}
+
+// 修改个人资料请求 0x401e
+message UpdateUserInfoRequest
+{
+	required uint64 user_id = 1;		// 用户ID
+	optional string nick_name = 2;		// 昵称
+	optional uint32 sex = 3;			// 性别
+	optional string mobile = 4;			// 手机
+	optional string birthday = 5;		// 生日
+	optional string email = 6;			// Email
+	optional uint32 age = 7;			// 年龄
+	optional uint32 constellation = 8;	// 星座
+	optional string sign = 9;			// 个性签名
+	optional string like = 10;	// 喜欢
+	optional string city = 11;			// 城市 - 所在地
+	optional string personal_desc = 12;	// 个人说明*
+	optional string real_name = 13;		// 真实姓名*
+}
+// 修改个人资料响应
+message UpdateUserInfoResponse
+{
+	required Result result = 1;
+}
+
+// 修改个性签名请求 0x401f
+message UpdateUserMoodRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional string mood = 2;			// 个性签名
+}
+// 修改个性签名响应
+message UpdateUserMoodResponse
+{
+	required Result result = 1;
+}
+
+// 修改昵称请求 0x4020
+message UpdateUserNickNameRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional string nick_name = 2;      // 昵称
+}
+// 修改昵称响应
+message UpdateUserNickNameResponse
+{
+	required Result result = 1;
+}
+
+// 修改头像请求 0x4021
+message UpdateAvatarRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional uint32 avatar_id = 2;      // 头像ID
+    optional string avatar = 3;         // 自定义头像
+}
+// 修改头像响应
+message UpdateAvatarResponse
+{
+	required Result result = 1;
+}
+
+// 取群成员信息请求 0x4022
+message GetGroupUserInfoRequest
+{
+	required uint64 group_id = 1;	  // 群ID
+	repeated uint64 user_id = 2;  // 用户ID列表
+}
+// 取群成员信息响应
+message GetGroupUserInfoResponse
+{
+  	required Result result = 1; //响应结果
+	optional uint64 group_id = 2;	  // 群ID
+    repeated GroupUserListItem group_members = 3; //群成员信息列表
+}
+
+// 取好友基本信息请求 0x4023
+message GetFriendBaseInfoRequest
+{
+	required uint64 user_id = 1; //用户ID
+	repeated uint64 friend_id = 2; //好友ID列表
+}
+// 好友列表项信息
+message FriendListItem
+{
+	required uint64 user_id = 1;   // 好友ID
+	optional string nick_name = 2; // 好友昵称
+    optional uint32 avatar_id = 3; // 头像ID
+    optional string avatar = 4;    // 自定义头像
+    optional string sign = 5;      // 个性签名
+    optional uint32 level = 6;     // 用户等级
+}
+// 取好友基本信息响应
+message GetFriendBaseInfoResponse
+{
+	required Result result = 1; //响应结果
+	optional uint64 user_id = 2; // 用户ID
+	repeated FriendListItem friend_item = 4; //好友列表信息
+}
+
+// 获取群选项请求 0x4024
+message GetGroupOptionRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 group_id = 2;  //群ID
+}
+// 获取群选项响应
+message GetGroupOptionResponse
+{
+    required Result result = 1; //响应结果
+    optional uint64 user_id = 2;  // 用户ID
+    optional uint64 group_id = 3; // 群ID
+    optional uint32 verify_type = 4; //验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入，4-指定的人员可以加入)
+    optional uint64 channel_id = 5;  //频道ID
+    optional int32 msg_mode = 6;  //消息模式  1接收并提示 2不提示只显示数目 3屏蔽群消息
+    optional int32 talk_mode = 7;  //发言模式  1所有人都能发言 2仅管理员能发言
+}
+
+// 获取群员名片请求 0x4025
+message GetGroupUserCardRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 group_id = 2;  //群ID
+}
+// 获取群员名片响应
+message GetGroupUserCardResponse
+{
+    required Result result = 1; //响应结果
+    optional uint64 user_id = 2;  // 用户ID
+    optional uint64 group_id = 3; // 群ID
+    optional string nick_name = 4;    // 用户在群中的昵称
+    optional string phone = 5;        // 电话
+    optional string mail = 6;         // 邮箱
+    optional string remark = 7;       // 备注姓名
+}
+
+// 设置群消息提示模式请求 0x4026
+message SetGroupMsgModeRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 group_id = 2;  //群ID
+	required uint32 msg_mode  = 3;  //消息提示模式： 1接收并提示 2不提示只显示数目 3屏蔽群消息
+}
+// 设置群消息提示模式响应
+message SetGroupMsgModeResponse
+{
+    required Result result = 1; //响应结果
+}
+
+// 设置群发言模式请求 0x4027
+message SetGroupTalkModeRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 group_id = 2;  //群ID
+	required uint32 talk_mode  = 3;  //群发言模式： 1所有人都能发言 2仅管理员能发言
+}
+// 设置群发言模式响应
+message SetGroupTalkModeResponse
+{
+    required Result result = 1; //响应结果
+}
+
+// 取群管理员列表请求 0x4028
+message GetGroupManagerListRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+// 取群管理员列表响应
+message GetGroupManagerListResponse
+{
+	optional uint64 group_id = 1;	  // 群ID
+	optional uint32 sum_num = 2;	// 群管理员总数
+    repeated uint64 group_user_id = 3; // 群管理员ID列表
+  	required Result result = 4; //响应结果
+}
+
+//----以下是通知消息定义，需要通过转发服务器发到客户端：
+//message_type由MessageDistributeServer.proto文件定义
+//加入群请求（通知转发服务器） message_type 1001
+message NotifyJoinGroupRequest
+{
+}
+
+// 退出群请求（通知转发服务器） message_type 1002
+message NotifyExitGroupRequest
+{
+}
+
+// 踢用户出群请求（通知转发服务器） message_type 1003
+message NotifyKickoutGroupUserRequest 
+{
+    required uint64 admin_user_id = 1; // 管理员ID (消息头中的userid为被踢用户ID)
+}
+
+// 设置群管理员请求（通知转发服务器） message_type 1004
+message NotifySetGroupManagerRequest
+{
+    required uint64 super_admin_user_id = 1;  // 超级管理员ID（ 消息头中的userid为被设置成管理员的ID)
+		required uint32 control_value = 2; // 设置值 - 1设置，0取消
+}
+
+// 解散群请求（通知转发服务器） message_type 1005
+message NotifyDeleteGroupRequest
+{
+    required uint64 super_admin_user_id = 1;  // 超级管理员ID
+}
+
+// 设置群用户信息请求（通知转发服务器） message_type 1006
+message NotifyUpdateGroupRemarkRequest
+{
+    required uint64 admin_user_id = 1; //操作者ID（管理员ID或用户本人），消息头中的userid为被设置的用户ID
+    optional string remark = 2;
+}
+
+// 修改群信息请求（通知转发服务器） message_type 1007
+message NotifyUpdateGroupInfoRequest
+{
+    optional string group_name = 1;   // 群名称
+    optional string remark =2;       // 备注
+    optional uint32 type = 3;         // 类型
+    optional string group_intro = 4;  // 群简介
+    optional string group_notice =5; // 群公告
+}
+
+// 修改群选项请求（通知转发服务器）  message_type 1008
+message NotifyUpdateGroupOptionRequest
+{
+    optional uint32 verify_type = 1; //验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入，4-指定的人员可以加入)
+	optional uint64 channel_id = 2;  //频道ID
+}
+
+// 修改群公告请求（通知转发服务器） message_type 1009
+message NotifyUpdateGroupNoticeRequest
+{
+	optional string notice = 1;  // 群公告内容
+}
+

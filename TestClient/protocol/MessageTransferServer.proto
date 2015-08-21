@@ -1,0 +1,306 @@
+package tt_mts;
+
+import "GroupId.def.proto";
+enum COMMAND
+{
+    TMCP_MTS_USER_LOGIN = 0X4201;
+    TMCP_MTS_USER_LOGOUT = 0X4202;
+
+    TMCP_MTS_EVT_REG_INTEREST_GROUP = 0X4211;
+    TMCP_MTS_EVT_UNREG_INTEREST_GROUP = 0X4212;
+
+    TMCP_MTS_UPLINK_MSG = 0X4221;
+    TMCP_MTS_DOWNLINK_MSG = 0X4222;
+
+	TMCP_MTS_UPLINK_GROUP_MSG = 0X4223;
+    TMCP_MTS_DOWNLINK_GROUP_MSG = 0X4224;
+
+    TMCP_MTS_HISTORY_MSG = 0X4226;
+    TMCP_MTS_HISTORY_GROUP_MSG = 0X4227;
+    TMCP_MTS_HISTORY_SYS_MSG = 0X4228;
+
+    TMCP_MTS_HISTORY_MSG_COUNT_INFO = 0X4231;
+    TMCP_MTS_HISTORY_MSG_FROM_USER = 0X4232;
+}
+
+enum DEBUG_COMMAND
+{
+    TMCP_MTS_DEBUG_LIST_USERS = 0X42A1;
+    TMCP_MTS_DEBUG_LIST_OTHER_SERVICES = 0X42A2;
+    TMCP_MTS_DEBUG_LIST_GROUPS_BELONG_TO_USER = 0X42A3;
+    TMCP_MTS_DEBUG_LIST_GROUPS_BELONG_TO_GROUPSERVER = 0X42A4;
+    TMCP_MTS_DEBUG_LIST_USERS_BELONG_TO_GROUP = 0X42A5;
+}
+
+enum MACRO_DEFINE
+{
+	TMCP_MTS_QUERY_FUZZY_MESSAGE_TYPE = 0X7FFFFFF0;
+//	TMCP_MTS_QUERY_FUZZY_FROM_USER = 0X7FFFFFFFFFFFFFF0;
+}
+
+//command id : 0X4201
+message LoginRequest
+{
+	required uint64 user_id = 1;
+	optional uint32 dev_type = 2;
+	optional string token = 3;
+	message AccessAddr
+	{
+		optional string ip = 1;
+		optional uint32 port = 2;
+	}
+	optional AccessAddr access_addr = 4;
+}
+//		response
+//    TMCP_ERR_LOGIN_REPEATED          16951 //重复登录
+//    TMCP_ERR_TOO_MANY_USERS          16952 //超过最大用户登录数
+
+//command id : 0X4202
+message LogoutRequest
+{
+	required uint64 user_id = 1;
+	optional uint32 dev_type = 2;
+}
+
+//command id : 0X4211
+message RegisterInterestGroupIdRequest
+{
+	required uint64 user_id = 1;
+	repeated tt_im_group.GroupId groupid_list = 2;
+}
+
+//command id : 0X4212
+message UnRegisterInterestGroupIdRequest
+{
+	required uint64 user_id = 1;
+	repeated tt_im_group.GroupId groupid_list = 2;
+}
+
+//command id : 0X4221
+message UplinkMessageRequest
+{
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
+	required uint32 is_online = 3;
+	required string message = 4;
+	optional uint32 message_type = 5;
+	optional string mts_ip = 6;
+	optional uint32 mts_port = 7;
+}
+
+//command id : 0X4222
+message DownlinkMessageRequest
+{
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
+	required uint32 message_pts = 3;
+	required string message = 4;
+	optional uint32 message_type = 5;
+}
+
+// 用户发送群消息
+//command id : 0X4223
+message UplinkGroupMessageRequest
+{
+	required uint64 from_user_id = 1;	// 发送者ID
+	required tt_im_group.GroupId group_id = 2;	// 群ID
+	required string message = 3;	// 消息
+	optional uint32 message_type = 4;	//消息类型
+	optional uint32 message_priority = 5;	// 消息优先级
+}
+
+//command id : 0X4224
+message DownlinkGroupMessageRequest
+{
+	required uint64 from_user_id = 1;	//发送者ID
+	required tt_im_group.GroupId group_id = 2;	// 群ID
+	required string message = 3;	// 消息
+	required uint32 message_pts = 4; //消息时间戳， 秒
+	optional uint32 message_type = 5;	//消息类型
+	optional uint32 message_priority = 6;	//消息优先级，暂未启用，默认0
+}
+
+//TMCP_MTS_HISTORY_MSG = 0X4226;
+message HistoryMessageRequest
+{
+	required uint64 user_id = 1;
+	optional uint32 begin_time = 2;
+	optional uint32 time_length = 3;
+	optional uint32 message_count = 4;
+}
+
+message HistoryMessageResponse
+{
+	required uint64 user_id = 1;
+	repeated DownlinkMessageRequest messages = 2;
+	optional uint32 current_time = 3;
+	optional uint32 total_count = 4;
+	optional uint32 count = 5;
+	optional uint32 index = 6;
+}
+
+//    TMCP_MTS_HISTORY_MSG_COUNT_INFO = 0X4231;
+message HistoryMessageCountInfoRequest
+{
+	required uint64 to_user_id = 1;
+	repeated uint64 from_user_ids = 2; //数组个数为0时候，字段为模糊查询字段
+	optional uint32 begin_time = 3;
+	optional uint32 time_length = 4;
+	repeated uint32 message_types = 5;//数组个数为0时候，字段为模糊查询字段
+}
+
+message HistoryMessageCountInfoResponse
+{
+	message HistoryMessageType2CountInfo
+	{
+		required uint32 message_type = 1;
+		required uint32 count = 2;
+	}
+	message HistoryMessageUser2CountInfo
+	{
+		required uint64 from_user_id = 1;
+		repeated HistoryMessageType2CountInfo countinfos = 2;
+	}
+	required uint64 to_user_id = 1;
+	optional uint32 begin_time = 2;
+	optional uint32 time_length = 3;
+	repeated uint32 message_types = 4;
+	repeated HistoryMessageUser2CountInfo message_count_infos = 5;
+}
+
+//    TMCP_MTS_HISTORY_MSG_FROM_USER = 0X4232;
+message HistoryMessageFromUserRequest
+{
+	required uint64 to_user_id = 1;
+	optional uint64 from_user_id = 2[default = 0X7FFFFFFFFFFFFFF0];//值 0X7FFFFFFFFFFFFFF0 为模糊查询字段
+	optional uint32 begin_time = 3;
+	optional uint32 time_length = 4;
+	repeated uint32 message_types = 5;////数组个数为0时候，字段为模糊查询字段
+	optional bool is_equeal_message_types = 6;
+	optional uint32 message_count = 7;
+}
+
+message HistoryMessageFromUserResponse
+{
+	required uint64 to_user_id = 1;
+	optional uint64 from_user_id = 2;
+	repeated uint32 message_types = 3;
+	optional bool is_equeal_message_types = 4;
+	repeated DownlinkMessageRequest messages = 5;
+	optional uint32 current_time = 6;
+	optional uint32 total_count = 7;
+	optional uint32 count = 8;
+	optional uint32 index = 9;
+}
+
+//TMCP_MTS_HISTORY_GROUP_MSG = 0X4227;
+message HistoryGroupMessageRequest
+{
+	required tt_im_group.GroupId group_id = 1;
+	optional uint32 begin_time = 2;
+	optional uint32 time_length = 3;
+	optional uint32 message_count = 4;
+}
+
+message HistoryGroupMessageResponse
+{
+	required tt_im_group.GroupId group_id = 1;
+	repeated DownlinkGroupMessageRequest messages = 2;
+	optional uint32 current_time = 3;
+	optional uint32 total_count = 4;
+	optional uint32 count = 5;
+	optional uint32 index = 6;
+}
+
+//TMCP_MTS_HISTORY_SYS_MSG = 0X4228;
+message HistorySysMessageRequest
+{
+	optional uint32 message_type = 1;
+	optional uint32 begin_time = 2;
+	optional uint32 time_length = 3;
+	optional uint32 message_count = 4;
+}
+
+message HistorySysMessageResponse
+{
+	optional uint32 message_type = 1;
+	repeated DownlinkMessageRequest messages = 2;
+}
+
+//debug interface
+
+message MTS_DEBUG_UserInfo
+{
+	required uint64 user_id = 1;
+	required string user_ip = 2;
+	required uint32 user_port = 3;
+	optional uint32 login_time = 4;
+}
+
+message MTS_DEBUG_ServiceInfo
+{
+	required uint32 serve_type = 1;
+	required string serve_ip = 2;
+	required uint32 serve_port = 3;
+	optional uint32 connect_time = 4;
+}
+
+//    TMCP_MTS_DEBUG_LIST_USERS = 0X42A1;
+message MTS_DEBUG_ListUsersRequest
+{
+
+}
+
+message MTS_DEBUG_ListUsersResponse
+{
+	repeated MTS_DEBUG_UserInfo users = 1;	
+}
+
+//    TMCP_MTS_DEBUG_LIST_OTHER_SERVICES = 0X42A2;
+message MTS_DEBUG_ListOtherServicesRequest
+{
+
+}
+
+message MTS_DEBUG_ListOtherServicesResponse
+{
+	repeated MTS_DEBUG_ServiceInfo services = 1;	
+}
+
+//    TMCP_MTS_DEBUG_LIST_GROUPS_BELONG_TO_USER = 0X42A3;
+message MTS_DEBUG_ListGroupsBelongToUserRequest
+{
+	required uint64 user_id = 1;
+}
+
+message MTS_DEBUG_ListGroupsBelongToUserResponse
+{
+	required uint64 user_id = 1;
+	repeated tt_im_group.GroupId group_ids = 2;
+}
+
+//    TMCP_MTS_DEBUG_LIST_GROUPS_BELONG_TO_GROUPSERVER = 0X42A4;
+message MTS_DEBUG_ListGroupsBelongToGroupserverRequest
+{
+	required string groupserver_ip = 1;
+	optional uint32 groupserver_port = 2;
+}
+
+message MTS_DEBUG_ListGroupsBelongToGroupserverResponse
+{
+	required string groupserver_ip = 1;
+	optional uint32 groupserver_port = 2;
+	repeated tt_im_group.GroupId group_ids = 3;
+}
+
+//    TMCP_MTS_DEBUG_LIST_USERS_BELONG_TO_GROUP = 0X42A5;
+message MTS_DEBUG_ListUsersBelongToGroupRequest
+{
+	required tt_im_group.GroupId group_id = 1;
+}
+
+message MTS_DEBUG_ListUsersBelongToGroupResponse
+{
+	required tt_im_group.GroupId group_id = 1;
+	repeated MTS_DEBUG_UserInfo users = 2;
+}

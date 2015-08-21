@@ -1,0 +1,767 @@
+package TerminalProtocol;
+
+// 执行结果，被其他响应使用
+message Result
+{
+	required uint32 code = 1;   // 错误代码 0成功, 1失败
+	required string msg = 2;	// 错误描述
+}
+
+// 登录请求
+message LoginRequest
+{
+	required string login_name = 1;   // 登录帐号
+	required string password = 2;     // 密码
+	required uint32 online_state = 3; // 在线状态
+	required uint32 terminal_type = 4; // 终端类型
+	optional string mac_addr = 5;      // MAC地址
+	optional uint32 has_camera = 6;	   // 是否有摄像头 - 1有，0无
+    optional uint32 login_type = 7;	   // 登录账号类型
+}
+
+// 重定向
+message Redirect
+{
+	required string server_ip = 1;	 // 重定向服务器IP
+	required uint32 server_port = 2; // 重定向服务器Port
+	optional uint32 app_id = 3;
+}
+
+// 登录响应
+message LoginResponse
+{
+	required Result result = 1;	   // 响应结果
+	optional uint64 user_id = 2;   // 用户ID
+	optional uint64 tt_number = 3; // TT号
+	optional string nick_name = 4; // 用户昵称
+    optional string avatar_id = 5; // 用户头像ID
+	optional string avatar = 6;	   // 用户自定义头像
+	optional string token = 7;	   // 登录令牌
+	optional string mts_ip = 8;	   // mts ip
+	optional uint32 mts_port = 9;  // mts port
+}
+
+// 保活请求
+message KeepaliveRequest
+{
+    required uint64 user_id = 1;    // 用户ID
+}
+
+// 注销请求
+message LogoutRequest
+{                                      // 
+	required uint64 user_id = 1;	   // 用户ID
+	required uint32 terminal_type = 2; // 终端类型
+}
+
+// 注销响应
+message LogoutResponse
+{
+	required Result result = 1;
+	optional uint64 user_id = 2;
+}
+
+///////////////////////////////
+// 取好友列表修改 zhouxg 2015-1-8
+///////////////////////////////
+// 取好友列表请求
+message GetFriendListRequest
+{
+	required uint64 user_id = 1; // 用户ID
+    optional uint64 version_id = 2;
+}
+
+// 取好友列表响应
+message GetFriendListResponse 
+{
+	required uint64 user_id = 1;			 // 用户ID
+    optional uint64 version_id = 2;
+    repeated uint64 friend_id = 3;
+}
+
+// 取好友基础信息请求
+message GetFriendBasicInfoRequest
+{
+    required uint64 user_id = 1;   //用户ID
+	repeated uint64 friend_id = 2; //好友ID列表
+}
+
+// 好友列表项信息
+message FriendBasicInfo
+{
+	required uint64 user_id = 1;   // 好友ID
+	optional string nick_name = 2; // 好友昵称
+    optional uint32 avatar_id = 5; // 头像ID
+    optional string avatar = 6;    // 自定义头像
+    optional string sign = 7;      // 个性签名
+    optional uint32 level = 8;     // 用户等级
+}
+
+// 取好友基础信息响应
+message GetFriendBasicInfoResponse
+{
+	optional uint64 user_id = 1;              // 用户ID
+	repeated FriendBasicInfo friend_info = 2; //好友列表信息
+}
+///////////////////////////////////
+
+// 取个人详细资料&用户详细资料请求
+message GetUserInfoRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+    required uint64 friend_id = 2; // 获取谁的
+}
+
+// 取个人详细资料响应
+message GetUserInfoResponse
+{
+	required uint64 user_id = 1;		// 用户ID
+	optional uint64 tt_number = 2;		// TT号
+	optional string user_name = 3;		// 用户名
+	optional string nick_name = 4;		// 昵称
+	optional uint32 sex = 5;			// 性别
+	optional string mobile = 6;			// 手机
+	optional string birthday = 7;		// 生日
+	optional string email = 8;			// Email
+	optional uint32 user_grade = 9;		// 用户等级
+	optional uint32 age = 10;			// 年龄
+	optional uint32 constellation = 11;	// 星座
+	optional string sign = 12;			// 个性签名
+	optional string like = 13;	// 喜欢
+	optional string city = 14;			// 城市 - 所在地
+	optional string personal_desc = 15;	// 个人说明
+	optional string real_name = 16;		// 真实姓名
+    optional uint64 friend_id = 17;     // 获取谁的
+}
+
+// 改变在线状态请求
+message ChangeOnlineStateRequest
+{
+	required uint64 user_id = 1;       // 用户ID
+    required uint32 terminal_type = 2; // 终端类型
+	required uint32 online_state = 3;  // 在线状态
+}
+
+// 好友在线状态通知
+message FriendOnlineStateNotify
+{
+	required uint64 user_id = 1;       // 用户ID
+    required uint32 terminal_type = 2; // 终端类型
+	required uint32 online_state = 3;  // 在线状态
+	optional string mts_ip = 4;			//好友所在MTS的IP
+	optional uint32 mts_port = 5;		//好友所在MTS的端口
+}
+
+// 批量好友在线状态通知
+message FriendsOnlineStateNotify
+{
+    required uint64 user_id = 1;			 // 用户ID
+	required uint32 sum_num = 2;			 // 好友总数量
+	required uint32 cur_num = 3;			 // 实际发送数量
+	repeated FriendOnlineStateNotify friend_state = 4; // 好友状态列表
+}
+
+// 取群列表
+message GetGroupListRequest
+{
+	required uint64 user_id = 1; // 用户ID
+}
+
+// 群列表项
+message GroupListItem
+{
+	required uint64 group_id = 1;	// 群ID
+	optional string group_name = 2; // 群名称
+	optional string remark = 3;		// 群备注
+    optional uint32 avatar_id = 4;  // 群头像ID
+	optional string avatar = 5;		// 群自定义头像
+}
+
+// 取群列表响应
+message GetGroupListResponse
+{
+	required uint64 user_id = 1;		   // 用户ID
+	repeated GroupListItem group_item = 2; // 群列表
+}
+
+// 创建群请求
+message CreateGroupRequest
+{
+	required uint64 user_id = 1;	 // 用户ID
+	required string group_name = 2;	 // 群名称
+	optional uint32 group_type = 3;	 // 群类型
+	optional string group_icon = 4;	 // 群图标
+	optional uint32 verify_type = 5; // 群验证类型
+	optional string group_intro = 6; // 群简介
+	optional string group_sign = 7;	 // 群公告
+	optional uint32 avatar_id = 8;	 // 群头像ID
+	optional uint32 sub_type = 9;
+}
+
+// 创建群响应
+message CreateGroupResponse
+{
+    required Result result = 1;       // 结果
+	optional uint64 user_id = 2;	  // 用户ID
+	optional uint64 group_id = 3;	  // 群ID
+	optional uint32 group_number = 4; // 新群号
+}
+
+// 加入群请求
+message JoinGroupRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+
+// 加入群响应
+message JoinGroupResponse
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+    optional uint32 verify_type = 3; // 验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入)
+}
+
+message JoinGroupVerifyRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+	optional uint32 verify_type = 3; // 验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入)
+	required string verify_msg = 4;	 // 验证信息
+	optional uint64 group_manager_id = 5; // 群管理员ID
+}
+
+message JoinGroupVerifyResponse
+{
+	required Result result = 1; // 0失败，1等待管理员验证
+}
+
+message JoinGroupConfirmRequest
+{
+	required Result result = 1;	 // 对方同意或拒绝（1同意，2拒绝）,拒绝原因
+	required uint64 user_id = 2; //发送者ID（某群内管理员）
+	required uint64 group_user_id = 3; //好友ID
+	optional uint64 group_id = 4;	   // 群ID
+}
+
+// 加群结果通知
+message JoinGroupNotify
+{
+    required Result result = 1;			  // 结果 对方同意或拒绝（1同意，2拒绝）,拒绝原因
+	required uint64 user_id = 2;		  // 用户ID
+	required uint64 group_id = 3;		  // 群ID
+	optional uint64 group_manager_id = 4; // 群管理员ID
+}
+
+// 退出群请求
+message ExitGroupRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+
+// 退出群响应
+message ExitGroupResponse
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+	required Result result = 3;	   // 响应结果
+}
+
+/////////////////////
+// 获取群成员列表修改 zhouxg 2015-1-8
+/////////////////////
+// 取群成员ID列表请求
+message GetGroupUserListRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+}
+
+// 取群成员ID列表响应
+message GetGroupUserListResponse
+{
+    repeated uint64 user_id = 1; // 群成员ID列表
+}
+
+// 取群成员基本信息请求
+message GetGroupUserInfoRequest
+{
+    required uint64 group_id = 1; // 群ID
+    repeated uint64 user_id = 2; // 用户ID列表
+}
+
+// 群成员列表项
+message GroupUserInfo
+{
+	required uint64 user_id = 1;	  // 用户ID
+	optional string nick_name = 2;	  // 昵称
+    optional uint32 online_state = 3; // 在线状态
+	optional uint32 avatar_id = 4;    // 头像ID
+    optional string avatar = 5;       // 用户自定义头像
+	optional uint32 role = 6;		  //用户角色 0-群主 1-管理员  2-普通用户
+}
+
+// 取群成员基本信息响应
+message GetGroupUserInfoResponse
+{
+    optional uint64 group_id = 1;                 // 群DI
+    repeated GroupUserInfo user_info = 2; // 群成员列表 - 此项可重复N次
+}
+///////////////////
+
+// 搜索群成员请求(群名片和昵称中搜索）
+message SearchGroupUserListRequest
+{
+	required uint64 group_id = 1;      // 群ID
+	required string search_string = 2; //搜索字符串
+}
+// 搜索群成员响应
+message SearchGroupUserListResponse
+{
+	required uint64 group_id = 1;			  // 群ID
+	repeated GroupUserInfo list_item = 2; // 群成员列表 - 此项可重复N次
+}
+
+// 添加好友请求
+message AddFriendRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+	required uint64 friend_id = 2; // 好友ID
+}
+
+// 添加好友响应
+message AddFriendResponse
+{
+	required uint32 verify_type = 1; // 验证类型(1-验证身份，2-拒绝任何人添加，3-允许任何人添加，4-回答问题)
+	optional uint32 question_type = 2; // 问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+}
+
+// 好友验证请求
+message AddFriendVerifyRequest
+{
+	required uint64 user_id = 1;   //发送者ID
+	required uint64 friend_id = 2; //好友ID
+	required uint32 type = 3;	   //1-验证身份2-回答问题
+	optional uint32 question_type = 4; // 问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+	optional string verify_msg = 5;	   //验证信息
+}
+
+// 好友验证响应
+message AddFriendVerifyResponse
+{
+	required uint64 user_id = 1;    // 发送者ID
+	required uint64 friend_id = 2;  // 好友ID
+	required uint32 is_allow = 3;   // 对方同意或拒绝(1同意 0拒绝 2等待对方验证)
+	optional string reason = 4;     // 原因
+}
+
+// 好友验证确认（由被添加方发送给TAS） 0x4143
+message AddFriendConfirmRequest
+{
+	required Result result = 1;    // 对方同意或拒绝（1同意，2拒绝）,拒绝原因
+	required uint64 user_id = 2;   //发送者ID
+	required uint64 friend_id = 3; //好友ID
+}
+
+// 添加好友结果通知
+message AddFriendNotify
+{
+    required Result result = 1;    // 对方同意或拒绝（1同意，2拒绝）,拒绝原因
+	required uint64 user_id = 2;   // 操作着ID
+    required uint64 friend_id = 3; // 被操作者ID
+}
+
+// 删除好友请求
+message DeleteFriendRequest
+{
+    required uint64 user_id = 1;   // 操作者ID
+    required uint64 friend_id = 2; // 被操作者ID
+}
+
+// 通知对方已被好友删除 - 更新列表
+message DeleteFriendNotify
+{
+    required uint64 user_id = 1;   // 操作着ID
+    required uint64 friend_id = 2; // 被操作者ID
+}
+
+// 修改好友所在分组
+message UpdateFriendBranchRequest
+{
+    required uint64 user_id = 1;   // 操作者ID
+    required uint64 friend_id = 2; // 好友ID
+    required uint64 branch_id = 3; // 目标分组
+}
+
+// 好友分组管理
+// 添加好友分组
+message AddBranchRequest
+{
+    required uint64 user_id = 1;     // 用户ID
+    optional string branch_name = 2; // 分组名称
+    optional uint32 branch_sort = 3; // 分组排序
+}
+
+// 添加好友分组响应
+message AddBranchResponse
+{
+    required uint64 user_id = 1;     // 用户ID
+    optional uint64 branch_id = 2;   // 分组ID
+    optional string branch_name = 3; // 分组名称
+    optional uint32 branch_sort = 4; // 分组排序
+}
+
+// 删除好友分组
+message DeleteBranchRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 branch_id = 2; // 分组ID
+}
+
+// 修改好友分组名称
+message UpdateBranchNameRequest
+{
+    required uint64 user_id = 1;     // 用户ID
+    optional uint64 branch_id = 2;   // 分组ID
+    optional string branch_name = 3; // 分组名称
+    optional uint32 branch_sort = 4; // 分组排序
+}
+
+// 踢用户出群
+message KickoutGroupUserRequest
+{
+    required uint64 user_id = 1;       // 用户ID
+    optional uint64 group_user_id = 2; // 被操作者ID
+    optional uint64 group_id = 3;          //群ID
+}
+
+// 设置群管理员
+message SetGroupManagerRequest
+{
+    required uint64 user_id = 1;       // 操作者ID
+    optional uint64 group_id = 2;      // 群ID
+    optional uint64 group_user_id = 3; // 被操作群内用户ID
+    optional uint32 control_value = 4; // 设置值 - 1设置，0取消
+}
+
+// 修改好友备注
+message UpdateFriendRemarkRequest
+{
+	required uint64 user_id = 1;   // 用户ID
+	optional uint64 friend_id = 2; // 好友ID
+	optional string remark = 3;    // 备注名称
+}
+
+// 取好友分组列表请求
+message GetBranchListRequest
+{
+	required uint64 user_id = 1;
+	optional uint64 version_id = 2; //好友列表的版本信息，如果是第一次访问，为0。用户好友增删时，版本自动加1
+}
+
+message UserIdRemarkItem
+{
+    required uint64 user_id = 1; //用户ID
+    optional string user_remark = 2; //好友备注姓名
+}
+
+// 好友分组项
+message BranchListItem
+{
+    required uint64 branch_id = 1;    // 分组ID
+	optional string branch_name = 2; // 分组名称
+    optional uint32 branch_sort = 3;  // 分组排序
+	repeated UserIdRemarkItem users = 4; //好友列表
+}
+
+// 取好友分组列表响应
+message GetBranchListResponse
+{
+	required uint64 user_id = 1;		   // 发送者ID
+	optional uint64 version_id = 2;		   //好友列表的版本信息
+	repeated BranchListItem list_item = 3; // 分组列表
+}
+
+// 设置好友选项请求0x4146
+message SetFriendOptionRequest
+{
+    required uint64 user_id = 1; // 用户ID
+    optional uint32 verify_type = 2; // 验证类型(1-验证身份，2-拒绝任何人添加，3-达到积分，4-回答问题)
+	optional uint32 question_type = 3; // 设置问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+	optional string answer = 4; // 设置答案
+}
+
+// 群管理员发送的验证结果请求
+message GroupManagerVerifyRequest
+{
+    required uint64 user_id = 1;  // 发送者ID
+    required uint64 group_id = 2; // 群ID
+    optional string msg = 3;
+}
+
+// 群管理员发送的验证结果响应
+message GroupManagerVerifyResponse
+{
+	required uint64 user_id = 1;  // 发送者ID
+    required uint64 group_id = 2; // 群ID
+	optional uint32 is_allow = 3; // 对方同意或拒绝(1同意 0拒绝)
+	optional string reason = 4;   // 原因
+}
+
+// 解散群请求
+message DeleteGroupRequest
+{
+    required uint64 user_id = 1;  // 操作者ID（群主）
+    optional uint64 group_id = 2; // 群ID
+}
+
+// 解散群响应
+message DeleteGroupResponse
+{
+	optional Result result = 3;	   // 响应结果
+}
+
+// 设置群用户备注请求
+message UpdateGroupRemarkRequest
+{
+    required uint64 user_id = 1;     	// 用户ID
+    required uint64 group_id = 2;    	// 群ID
+    required uint64 group_user_id = 3;	// 被操作者ID
+    optional string remark = 4;         // 备注
+}
+
+// 修改群信息请求
+message UpdateGroupInfoRequest
+{
+    required uint64 user_id = 1;      // 用户ID
+    required uint64 group_id = 2;     // 群ID
+    optional string group_name = 3;   // 群名称
+    optional string remark = 4;       // 备注
+    optional uint32 type = 5;         // 类型
+    optional string group_intro = 6;  // 群简介
+    optional string group_notice = 7; // 群公告
+	optional string avatar = 8;		  // 群头像
+	optional uint32 avatar_id = 9;	  // 群头像ID
+	optional uint32 sub_type = 10;	  // 子类型
+}
+
+// 修改群选项请求
+message UpdateGroupOptionRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+    optional uint32 verify_type = 3; //验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入，4-指定的人员可以加入)
+	optional uint64 channel_id = 4;  //频道ID
+}
+
+// 获取群选项请求 0x4148
+message GetGroupOptionRequest
+{
+    required uint64 user_id = 1;   // 用户ID
+    required uint64 group_id = 2;  //群ID
+}
+// 获取群选项响应
+message GetGroupOptionResponse
+{
+    required Result result = 1;	  //响应结果
+    optional uint64 user_id = 2;  // 用户ID
+    optional uint64 group_id = 3; // 群ID
+    optional uint32 verify_type = 4; //验证类型(1-允许任何人加入，2-需要验证，3-不允许任何人加入，4-指定的人员可以加入)
+    optional uint64 channel_id = 5;  //频道ID
+	optional int32 msg_mode = 6;	 //消息模式  1接收并提示 2不提示只显示数目 3屏蔽群消息
+    optional int32 talk_mode = 7;	 //发言模式  1所有人都能发言 2仅管理员能发言
+}
+
+
+// 修改群公告
+message UpdateGroupNotice
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+	optional string notice = 3;	  // 群公告内容
+}
+
+// 取群信息请求
+message GetGroupInfoRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+}
+
+// 取群信息应答***
+message GetGroupInfoResponse
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+    optional string group_name = 3;   // 群名称
+    optional string remark = 4;       // 备注
+    optional uint32 type = 5;         // 类型
+    optional string group_intro = 6;  // 群简介
+    optional string group_notice = 7; // 群公告
+	optional string avatar = 8;		  // 群头像
+	optional uint32 sub_type = 9;	  // 子类型
+	optional uint64 group_number  = 10; //群号
+	optional uint32 avatar_id = 11; //群头像ID
+	optional uint64 owner_id = 12; //群主ID
+}
+
+// 群公告更新通知
+message UpdateGroupNoticeNotify
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; // 群ID
+	optional string notice = 3;  // 群公告内容
+}
+
+// 修改个人资料
+message UpdateUserInfoRequest
+{
+	required uint64 user_id = 1;		// 用户ID
+	optional string nick_name = 2;		// 昵称
+	optional uint32 sex = 3;			// 性别
+	optional string mobile = 4;			// 手机
+	optional string birthday = 5;		// 生日
+	optional string email = 6;			// Email
+	optional uint32 age = 7;			// 年龄
+	optional uint32 constellation = 8;	// 星座
+	optional string sign = 9;			// 个性签名
+	optional string like = 10;	// 喜欢
+	optional string city = 11;			// 城市 - 所在地
+	optional string personal_desc = 12;	// 个人说明
+	optional string real_name = 13;		// 真实姓名
+}
+
+// 修改个性签名
+message UpdateUserMoodRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional string mood = 2;			// 个性签名
+}
+
+// 修改昵称
+message UpdateUserNickNameRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional string nick_name = 2;      // 昵称
+}
+
+// 修改头像
+message UpdateAvatarRequest
+{
+    required uint64 user_id = 1;		// 用户ID
+    optional uint32 avatar_id = 2;      // 昵称
+    optional string avatar = 3;         // 自定义头像
+}
+
+
+
+// ----------------------------------------------------------------
+// 踢用户下线 - 异地登录
+message KickUserOffline
+{
+    required Result result = 1; // code=1,异地登录
+    optional string ip = 2;     // 异地登录IP
+    optional uint32 port = 3;   // 异地登录Port
+}
+
+//////////////////////// 获取用户状态 zhouxg 2015-1-9
+message GetUserOnlineStateRequest
+{
+    repeated uint64 user_id = 1;
+}
+
+message UserOnlineStateInfo
+{
+    required uint64 user_id = 1;
+    optional uint32 online_state = 2;
+    optional string mts_ip = 3;
+	optional uint32 mts_port = 4;
+    optional bool has_camera = 6;
+    optional uint32 terminal_type = 7;
+}
+
+message GetUserOnlineStateResponse
+{
+    repeated UserOnlineStateInfo user_info = 1;
+}
+///////////////////////////
+
+message GetGroupUserCardRequest
+{
+    required uint64 user_id = 1;
+	required uint64 group_id = 3;
+}
+
+message GetGroupUserCardResponse
+{
+    required uint64 user_id = 1;
+	required uint64 group_id = 2;
+    optional string nickname = 3;
+    optional string tel = 4;
+    optional string email = 5;
+    optional string remark = 6;
+}
+
+message UpdateGroupUserCardRequest
+{
+    required uint64 user_id = 1;
+	required uint64 group_id = 2;
+    optional string nickname = 3;
+    optional string tel = 4;
+    optional string email = 5;
+    optional string remark = 6;
+	optional uint64 group_user_id = 7; //被操作的用户ID
+}
+
+message SetGroupMsgModeRequest
+{
+    required uint64 user_id = 1;  // 用户ID
+    required uint64 group_id = 2; //群ID
+	required uint32 msg_mode  = 3; //消息提示模式： 1接收并提示 2不提示只显示数目 3屏蔽群消息
+}
+
+message SetGroupTalkModeRequest
+{
+    required uint64 user_id = 1;	// 用户ID
+    required uint64 group_id = 2;	//群ID
+	required uint32 talk_mode  = 3;	//群发言模式： 1所有人都能发言 2仅管理员能发言
+}
+
+// 获取好友验证信息请求 0x4147
+message GetFriendVerifyInfoRequest
+{
+	required uint64 user_id = 1;    //发送者ID
+}
+
+// 获取好友验证信息响应
+message GetFriendVerifyInfoResponse
+{
+	optional uint32 verify_type = 1; // 验证类型(1-验证身份，2-拒绝任何人添加，3-允许任何人添加，4-回答问题)
+	optional uint32 question_type = 2; // 问题类型(1-家乡是？，2-职业是？，3-名字是？，4-手机是？)
+	optional string answer = 3;//验证问题的答案
+	required Result result = 4; //响应结果
+}
+
+// 取群管理员列表请求 0x414a
+message GetGroupManagerListRequest
+{
+	required uint64 user_id = 1;  // 用户ID
+	required uint64 group_id = 2; // 群ID
+}
+// 取群管理员列表响应
+message GetGroupManagerListResponse
+{
+	optional uint64 group_id = 1;	   // 群ID
+	optional uint32 sum_num = 2;	   // 群管理员总数
+    repeated uint64 group_user_id = 3; // 群管理员ID列表
+  	required Result result = 4;		   //响应结果
+}
+
+// 删除历史记录 0x414e
+message DeleteHistoryMessageRequest
+{
+	required uint64 user_id = 1;
+	optional uint32 msg_type = 2;
+	optional uint32 last_time = 3;
+}

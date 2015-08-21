@@ -1,0 +1,114 @@
+package tt_presence;
+
+//  在线服务COMMANDID：0x43XX
+//	COMMAND_CHGUSERINFOREQUEST = 0x4301,
+//	COMMAND_CHGUSERINFONOTIFY = 0x4302,
+//	COMMAND_GETUSERSTATEREQUST = 0x4303,
+//	COMMAND_GETUSERSTATERESPONSE = 0x4304,
+//	COMMAND_GETUSERRELATIONLISTREQUEST = 0x4305,
+//  COMMAND_GetUSERRELATIONLISTRESPONE = 0x4306,
+//	COMMAND_GETUSERINFOFROMPRESENCE = 0x4307,
+//  COMMAND_OPERUSERFRIENDREQUSET = 0X4308,
+//  COMMAND_OPERUSERFRIENDRESPONE = 0X4309,
+//  COMMAND_KICKUSERREQUEST = 0x4310,
+//  COMMAND_OPERUSERFRIENDNOTIFY = 0X4311
+
+enum UserInfoMessageType
+{
+	MSG_TYPE_STATE = 0;      //状态
+	MSG_TYPE_NICKNAME = 1;   //昵称
+	MSG_TYPE_SIGNATURE = 2;  //个性签名
+	MSG_TYPE_MAX = 3;
+}
+
+enum UserState
+{
+	USER_STATE_ONLINE = 0;   //在线
+	USER_STATE_CORBET = 1;   //隐身
+	USER_STATE_LEAVE = 2;    //离开
+	USER_STATE_BUSY = 3;     //忙碌
+	USER_STATE_GAMEING = 4;  //游戏中
+	USER_STATE_OFFLINE = 5;  //离线
+}
+
+message ChgUserInfoRequset      //用户消息变更，包括用户状态，用户昵称，个性签名。command id:0x4301
+{
+	required uint64 user_id = 1;                                     //用户ID
+	optional string acc_ident = 2;                                   //接入标示
+	optional string trans_ident = 3;                                 //转发标示
+	optional bool is_camera = 4;                                     //是否有摄像头
+	optional uint32 ttype = 5;                                       //终端类型
+	optional UserState user_state = 6 [default = USER_STATE_ONLINE]; //用户状态
+	optional UserInfoMessageType msg_type = 7 [default = MSG_TYPE_STATE];    //要更改消息的类型
+	optional string msg_content = 8;                                 //消息的内容
+}
+
+message ChgUserInfoNotify    //用户消息变更推送，包括用户状态，用户昵称，个性签名。command id:0x4302
+{
+	required uint64 user_id = 1;
+	optional UserInfoMessageType msg_type = 2 [default = MSG_TYPE_STATE];
+	optional UserState user_state = 3;
+	optional bool is_camera = 4;
+	optional string trans_ident = 5;
+	optional uint32 ttype = 6; 
+	optional string msg_content = 7;
+	repeated uint64 user_list = 8;	
+}
+
+message GetUserStateRequset   //批量获取用户状态。command id:0x4303
+{
+	repeated uint64 user_list = 5;	
+}
+
+message GetUserStateResponse   //批量获取用户状态回复。command id:0x4304
+{	
+	message UserStateInfo
+	{
+		required uint64 user_id = 1;
+		optional UserState user_state = 2 [default = USER_STATE_ONLINE];
+		optional string trans_ident = 3;                                 //转发标示
+	    optional bool is_camera = 4;                                     //是否有摄像头
+	    optional uint32 ttype = 5;                                       //终端类型
+	}
+	repeated UserStateInfo user_list = 1;
+}
+
+message GetUserInfoFromPresence   //presence内部用。
+{
+	required uint64 user_id = 1;
+	optional UserInfoMessageType msg_type = 2 [default = MSG_TYPE_STATE];
+	optional UserState user_state = 3;
+	optional bool is_camera = 4;                                     //是否有摄像头
+	optional uint32 ttype = 5;                                       //终端类型
+	optional string trans_ident = 6;
+	optional string msg_content = 7;
+	repeated uint64 user_list = 8;
+}
+
+message OperUserFriendRequestFromPresence   //presence内部使用command id:0x4312
+{
+	required uint64 from_id = 1;   //谁发的
+    required uint64 to_id = 2;     //发给谁
+    required uint32 type = 3;      //命令类型
+    required string content = 4;   //内容
+}
+
+message MessageTransferRequest
+{
+	required uint64 from_id = 1;   //谁发的
+    required uint64 to_id = 2;     //发给谁
+    required uint32 type = 3;      //命令类型
+    required string content = 4;   //内容
+}
+
+message MessageTransferResponse
+{
+    required bool online = 1;
+}
+
+message KickUserRequest   //异地登陆，踢用户下线。command id:0x4310
+{
+	required uint64 user_id = 1;
+	optional string acc_ident = 2; 
+	optional uint32 ttype = 3;   
+}
