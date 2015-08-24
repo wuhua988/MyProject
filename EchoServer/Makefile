@@ -36,6 +36,7 @@ clean:
 	rm -f *.o *.d
 	rm -f protocol/*.o
 	rm -f protocol/*.d
+	rm $(TARGET)
 show:
 	@echo $(SOURCES)
 	@echo $(OBJS)

@@ -6,7 +6,7 @@ class ClientFramework : public Framework
 {
 public:
     ClientFramework(){}
-	~ClientFramework(){}
+    ~ClientFramework(){}
     virtual void OnMessage(MsgBlock* pMsgBlock);
     virtual int OnConnCreated(ConnInfo* pConnInfo);   
     virtual int OnFailConnect(ConnInfo* pConnInfo);

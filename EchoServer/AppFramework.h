@@ -5,7 +5,7 @@ class AppFramework : public Framework
 {
 public:
     AppFramework(){}
-	~AppFramework(){}
+    ~AppFramework(){}
     virtual void OnMessage(MsgBlock* pMsgBlock);
     virtual int OnConnCreated(ConnInfo* pConnInfo);   
     virtual int OnFailConnect(ConnInfo* pConnInfo);
