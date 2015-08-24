@@ -33,6 +33,7 @@ clean:
 	rm -f *.o *.d
 	rm -f redisClient/*.o redisClient/*.d
 	rm -f Business/*.o Business/*.d
+	rm $(TARGET)
 show:
 	@echo $(SOURCES)
 	@echo $(OBJS)

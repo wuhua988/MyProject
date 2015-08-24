@@ -11,20 +11,20 @@ class ConnectPool;
 class Framework
 {
 public:
-	Framework();
-	~Framework();
+    Framework();
+    ~Framework();
     void         SendMsg(MsgBlock* pMsgBlock);
     virtual void OnMessage(MsgBlock* pMsgBlock);
                  
     virtual int  OnConnCreated(ConnInfo* pConnInfo);   
     virtual int  OnFailConnect(ConnInfo* pConnInfo); //主动连接失败。
     virtual int  OnConnClosed(ConnInfo* pConnInfo);
-	ConnInfo*    GetConnInfo(UInt32 uiServerID,UInt32 uiConnID);
+    ConnInfo*    GetConnInfo(UInt32 uiServerID,UInt32 uiConnID);
                  
    //virtual void OnTime();
     virtual void OnSignal(int signum);
     virtual int  Init(int eventThreadNum, int businThreadNum);
-	virtual int  Run();
+    virtual int  Run();
     
     int          NoticeTcpListen(char const* host,UInt16 iPort);        
     int          NoticeTcpConnect(UInt32 uiServerID
@@ -37,6 +37,6 @@ public:
     int          NoticeCloseConnection(UInt32 uiServerID,UInt32 connID);
 private:
     int m_iEventThreadNum;
-	int m_iBusinThreadNum;
+    int m_iBusinThreadNum;
 };
 #endif //__Framework_h__

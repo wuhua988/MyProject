@@ -11,12 +11,12 @@ class UpdateUserInfoCommand : public CliCmd
 public:
     UpdateUserInfoCommand();
     UpdateUserInfoCommand(Framework* pFramework);
-	~UpdateUserInfoCommand();
-	
-	virtual void OnTimer();
-	virtual bool SendRequest();
+    ~UpdateUserInfoCommand();
+    
+    virtual void OnTimer();
+    virtual bool SendRequest();
     virtual void OnResponse(MsgBlock* pMsgBlock);
-	void SetParam(UInt64        user_id,	
+    void SetParam(UInt64        user_id,	
                   const string& nick_name,	
                   UInt32        sex,		
                   const string& mobile,	

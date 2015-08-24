@@ -15,25 +15,25 @@ ClientHost::ClientHost(const char* strHost, UInt16 uiPort, UInt32 uiServerID)
 , m_fInterval(2)
 {
     std::ostringstream oss;
-	oss << strHost << ':' << uiPort;
-	m_strServerIdent = oss.str();
+    oss << strHost << ':' << uiPort;
+    m_strServerIdent = oss.str();
 }
 
 ClientHost::~ClientHost()
 {
-	
+
 }
 
 bool ClientHost::AddCliConn(UInt32 uiConnID)
 {
-	OSMutexLocker theLocker(&m_ConnsMutex);	
-	m_clientConns.push_back(uiConnID);
-	return true;
+    OSMutexLocker theLocker(&m_ConnsMutex);	
+    m_clientConns.push_back(uiConnID);
+    return true;
 }
 
 UInt32  ClientHost::GetServerID()
 {
-	return m_uiServerID;
+    return m_uiServerID;
 }
 
 bool ClientHost::Close()
@@ -49,8 +49,8 @@ bool ClientHost::Close()
         }
         WatcherNoticePipe::AddNoticeToPipe(ccPtr->GetThread()
                                           ,WatcherNoticePipe::NOTICE_CLOSE_CONN
-        								  ,m_uiServerID
-        								  ,(void*)(PointerSizedUInt)(*iter));	
+                                          ,m_uiServerID
+                                          ,(void*)(PointerSizedUInt)(*iter));	
     }
     return true;
 }
@@ -64,9 +64,9 @@ bool ClientHost::Close(UInt32 connID)
     }
     PointerSizedUInt pConnID = connID;
     WatcherNoticePipe::AddNoticeToPipe(ccPtr->GetThread()
-                                       ,WatcherNoticePipe::NOTICE_CLOSE_CONN
-    								   ,m_uiServerID
-    								   ,(void*)pConnID);	
+                                      ,WatcherNoticePipe::NOTICE_CLOSE_CONN
+                                      ,m_uiServerID
+                                      ,(void*)pConnID);	
     return true;
 }
 
@@ -91,7 +91,7 @@ void ClientHost::SetTimerInfo(Float64 fExpire,Float64 fInterval)
         m_fExpire = 2;
     else
         m_fExpire = fExpire;
-    
+
     if(fInterval <= 0)
         m_fInterval = 2;
     else
@@ -122,18 +122,18 @@ ClientHost::clientSize ClientHost::GetConnCount()
 HostService::HostService(UInt32 uiServerID)
 :m_uiServerID(uiServerID)
 {
-	
+
 }
 
 HostService::~HostService()
 {
-	
+
 }
 
 bool HostService::AddCliConn(const char* strHost
-					        ,UInt16 uiPort
-					        ,Float64 fExpire
-			                ,Float64 fInterval)
+                            ,UInt16 uiPort
+                            ,Float64 fExpire
+                            ,Float64 fInterval)
 {
     std::string strIdent(strHost);
     std::ostringstream oss;
@@ -145,7 +145,7 @@ bool HostService::AddCliConn(const char* strHost
         ClientHostPtr ch = new ClientHost(strHost,uiPort,m_uiServerID);
         ch->SetTimerInfo(fExpire,fInterval);
         m_clientHost[oss.str()] = ch;
-		LOG_DEBUG("Add Host:%s",oss.str().c_str());
+        LOG_DEBUG("Add Host:%s",oss.str().c_str());
     }	
     return true;
 }
@@ -166,7 +166,7 @@ bool HostService::AddCliConnToHost(WatcherCliConnPtr pClientConn)
                  ,pClientConn->GetConnInfo()->GetConnIdent().c_str());
         return false;
     }	
-       
+
     iter->second->AddCliConn(pClientConn->GetConnID());
     return true;
 }
@@ -205,7 +205,7 @@ bool HostService::Remove(WatcherCliConnPtr pClientConn)
     {
         LOG_ERROR("Can't Find Client Host By Ident:%s",strIdent.c_str());
     }else{
-    	iter->second->Remove(pClientConn->GetConnInfo()->GetConnID());
+        iter->second->Remove(pClientConn->GetConnInfo()->GetConnID());
         if(iter->second->GetConnCount() == 0)
             m_clientHost.erase(iter);
     }
@@ -236,7 +236,7 @@ bool HostService::Close(UInt32 connID)
         LOG_ERROR("Can't Find Host Form ClientHostMap,Ident:%s",ccPtr->GetConnInfo()->GetConnIdent().c_str());
         return false;
     }
-    
+
     iter->second->Close(connID);
     return true;
 }
@@ -259,7 +259,7 @@ ClientConnMgr::ClientConnMgr(Framework* pFw)
 
 ClientConnMgr::~ClientConnMgr()
 {
-	
+
 }
 
 void ClientConnMgr::SetFramework(Framework* pFw)
@@ -275,11 +275,11 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
                            ,Float64 fExpire
                            ,Float64 fInterval)
 {
-	bool isOK = true;
+    bool isOK = true;
     {
-	    OSMutexLocker theLocker(&m_SvrID2Server_Mutex);
+        OSMutexLocker theLocker(&m_SvrID2Server_Mutex);
         mapSvrID2Service::iterator iter = m_SvrID2Service.find(uiServerID); 
-		HostServicePtr hsPtr;       
+        HostServicePtr hsPtr;       
         if(iter == m_SvrID2Service.end())
         {
             hsPtr = new HostService(uiServerID);
@@ -287,23 +287,23 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
         }else{
             hsPtr = iter->second;
         }
-		
-		if(hsPtr.isNull())
-	    {
-	        LOG_ERROR("HostService Is NULL,ServerID:%u,Host:%s,Port:%d",uiServerID,strHost,uiPort);
+
+        if(hsPtr.isNull())
+        {
+            LOG_ERROR("HostService Is NULL,ServerID:%u,Host:%s,Port:%d",uiServerID,strHost,uiPort);
             return false;
-	    }
+        }
         isOK = hsPtr->AddCliConn(strHost,uiPort,fExpire,fInterval);	
-	}
+    }
     std::ostringstream oss;
     for(UInt32 i = 0; i < uiConnNum; i++)
     {
         EventWorkThread* pThread = EventThreadPool::GetRandomWorkThread();
-		if(!pThread)
-		{
-			LOG_ERROR("Get Null Thread From EventWorkThreadPool When Client Connect,Host:%s,Port:%d",strHost,uiPort);
-			return false;
-		}
+        if(!pThread)
+        {
+            LOG_ERROR("Get Null Thread From EventWorkThreadPool When Client Connect,Host:%s,Port:%d",strHost,uiPort);
+            return false;
+        }
         WatcherCliConn* pWatcher = new WatcherCliConn(pThread->GetEvLoop(),m_pFramework);
         pWatcher->SetThread(pThread);
         pWatcher->GetConnInfo()->SetRemoteAddr(std::string(strHost));
@@ -311,14 +311,14 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
         pWatcher->GetConnInfo()->SetInterval(fInterval);
         pWatcher->GetConnInfo()->SetExpire(fExpire);
         pWatcher->GetConnInfo()->SetServerID(uiServerID);
-    	
+
         oss.str("");
         oss << strHost << ':' << uiPort;
         pWatcher->GetConnInfo()->SetConnIdent(oss.str());
-           
+
         WatcherNoticePipe::AddNoticeToPipe(pThread,WatcherNoticePipe::NOTICE_TCP_CLIENT,uiServerID,pWatcher);
     }	
-    
+
     return isOK;
 }
 
@@ -370,12 +370,12 @@ HostServicePtr ClientConnMgr::GetHostServicePtr(UInt32 uiServerID)
 
 bool ClientConnMgr::GetCliConnID(UInt32 uiServerID,UInt32& uiConnID)
 {
-	HostServicePtr ccs = GetHostServicePtr(uiServerID);
+    HostServicePtr ccs = GetHostServicePtr(uiServerID);
     if(ccs.isNull())
         return false;
     if(!ccs->GetCliConnID(uiConnID))
         return false;
-	return true;
+    return true;
 }
 
 WatcherCliConnPtr ClientConnMgr::GetCliConn(UInt32 uiServerID)     
@@ -383,11 +383,11 @@ WatcherCliConnPtr ClientConnMgr::GetCliConn(UInt32 uiServerID)
     HostServicePtr ccs = GetHostServicePtr(uiServerID);
     if(ccs.isNull())
         return WatcherCliConnPtr();
-    
+
     UInt32 uiConnID;
     if(!ccs->GetCliConnID(uiConnID))
         return WatcherCliConnPtr();
-    
+
     return GetCliConn(uiServerID,uiConnID);
 }   
 
@@ -417,14 +417,14 @@ bool ClientConnMgr::Remove(UInt32 uiConnID)
         m_ConnID2Conn.erase(iter);
     }
     {
-	    OSMutexLocker theLocker(&m_SvrID2Server_Mutex);	
-	    mapSvrID2Service::iterator iterService = m_SvrID2Service.find(ccp->GetServerID());
-	    if(iterService != m_SvrID2Service.end())
-	    {
-	        if(!iterService->second->Remove(ccp))
+        OSMutexLocker theLocker(&m_SvrID2Server_Mutex);	
+        mapSvrID2Service::iterator iterService = m_SvrID2Service.find(ccp->GetServerID());
+        if(iterService != m_SvrID2Service.end())
+        {
+            if(!iterService->second->Remove(ccp))
                 return false;
-	        if(iterService->second->GetHostCount() == 0)
-	            m_SvrID2Service.erase(iterService);
+            if(iterService->second->GetHostCount() == 0)
+                m_SvrID2Service.erase(iterService);
         }
     }
     return true;
@@ -437,7 +437,7 @@ bool ClientConnMgr::AddCliConn(WatcherCliConnPtr pConn)
         LOG_ERROR("Pass To ClientConnMgr NULL Connection");
         return false;
     }
-    
+
     {
         OSMutexLocker theLocker(&m_ConnID2Conn_Mutex);	
         mapConnID2Conn::iterator iter = m_ConnID2Conn.find(pConn->GetConnID());
@@ -446,24 +446,24 @@ bool ClientConnMgr::AddCliConn(WatcherCliConnPtr pConn)
             LOG_ERROR("This Connection Already Exists In ClientConnMgr,ServerID:%u,ConnID:%d",pConn->GetServerID(),pConn->GetConnID());
             return false;
         }
-        
+
         m_ConnID2Conn[pConn->GetConnID()] = pConn;
     }
-    
+
     {
         OSMutexLocker theLocker(&m_SvrID2Server_Mutex);	
-	    mapSvrID2Service::iterator iterService = m_SvrID2Service.find(pConn->GetServerID());
-	    if(iterService != m_SvrID2Service.end())
-	    {
-	        if(!(iterService->second->AddCliConnToHost(pConn)))
+        mapSvrID2Service::iterator iterService = m_SvrID2Service.find(pConn->GetServerID());
+        if(iterService != m_SvrID2Service.end())
+        {
+            if(!(iterService->second->AddCliConnToHost(pConn)))
                 return false;
         }else{
-             LOG_ERROR("Can't Find ClientHost From ClientConnMgr,ServerID:%u,ConnID:%d",pConn->GetServerID(),pConn->GetConnID());
-             return false;
+            LOG_ERROR("Can't Find ClientHost From ClientConnMgr,ServerID:%u,ConnID:%d",pConn->GetServerID(),pConn->GetConnID());
+            return false;
         }
     }
-	
-	return true;
+
+    return true;
 }
 
 WatcherCliConnPtr ClientConnMgr::GetCliConnPtr(UInt32 uiServerID,UInt32 uiConnID)
@@ -471,9 +471,9 @@ WatcherCliConnPtr ClientConnMgr::GetCliConnPtr(UInt32 uiServerID,UInt32 uiConnID
     WatcherCliConnPtr ccPtr = gCliConnMgr::instance()->GetCliConn(uiServerID,uiConnID);
     if(ccPtr.isNull())
     {
-    	LOG_ERROR("Can't Find Clent Connection From ClientConnMgr,ServerID:%u,ConnID:%u",uiServerID,uiConnID);
+        LOG_ERROR("Can't Find Clent Connection From ClientConnMgr,ServerID:%u,ConnID:%u",uiServerID,uiConnID);
     }
-	return ccPtr;
+    return ccPtr;
 }
 //----------ClientConnMgr Class End------------------------------------------------------------------------------//
 

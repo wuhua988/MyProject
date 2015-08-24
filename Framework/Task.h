@@ -15,13 +15,13 @@ public:
     virtual      SInt64 Run() = 0;
     void         Signal();
     void         SetTaskName(char* name);
-	virtual void OnTimer();	
-	void         StartTimer();
-	void         StopTimer();
+    virtual void OnTimer();	
+    void         StartTimer();
+    void         StopTimer();
 private:
     OSQueueElem         m_taskQueueElem;
-	char                m_taskName[48];
-	BusinessTimer<Task> m_timer;
+    char                m_taskName[48];
+    BusinessTimer<Task> m_timer;
     friend class TaskThread;
 };
 
@@ -47,7 +47,7 @@ class TaskThreadPool
 public:
     static Bool16      AddThreads(UInt32 numToAdd); 
     static void        RemoveThreads();
-	static TaskThread* GetTaskThread();
+    static TaskThread* GetTaskThread();
     static UInt32      GetNumThreads() { return m_sNumTaskThreads; }
     
 private:

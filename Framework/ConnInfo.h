@@ -1,4 +1,4 @@
-#ifndef __ConnInfo_h__
+Ôªø#ifndef __ConnInfo_h__
 #define __ConnInfo_h__
 #include <string>
 #include "OSHeaders.h"
@@ -7,7 +7,7 @@ class WatcherConnection;
 class ConnInfo
 {
 public:
-    ///¡¨Ω”◊¥Ã¨∂®“Â
+    ///ËøûÊé•Áä∂ÊÄÅÂÆö‰πâ
     enum ConnStatus
     {
         STATUS_NONE = 0,
@@ -20,9 +20,9 @@ public:
     ~ConnInfo();
 public:
     UInt32             GetConnID() const; 
-	UInt32             GetServerID() const; 
+    UInt32             GetServerID() const; 
     void               SetConnID(UInt32 uiConnId);
-	void               SetServerID(UInt32 uiConnId);
+    void               SetServerID(UInt32 uiConnId);
                        
     UInt32             GetListenId() const;
     void               SetListenId(UInt32 uiListenId);
@@ -38,30 +38,30 @@ public:
     void*              GetUserData() const;
     void               SetUserData(void* userData);
 	                   
-	std::string        GetRemoteAddr();
-	void               SetRemoteAddr(std::string strIP);
-	                   
-	UInt16             GetRemotePort();
-	void               SetRemotePort(UInt16 port);
+    std::string        GetRemoteAddr();
+    void               SetRemoteAddr(std::string strIP);
+                       
+    UInt16             GetRemotePort();
+    void               SetRemotePort(UInt16 port);
                        
     void               SetInterval(UInt32 iInterval);
     void               SetExpire(UInt32 iExpire);
 	                   
-	void               SetConnIdent(const std::string& strIdent);
-	std::string&       GetConnIdent();
-	WatcherConnection* GetHandler();
-	void               SetHandler(WatcherConnection*);
+    void               SetConnIdent(const std::string& strIdent);
+    std::string&       GetConnIdent();
+    WatcherConnection* GetHandler();
+    void               SetHandler(WatcherConnection*);
 private:
     UInt32             m_uiListenId; 
-	UInt32             m_uiConnId;
+    UInt32             m_uiConnId;
     UInt16             m_ConnState; 
     time_t             m_CreateTime;
     bool               m_bActiveConn;        
     void*              m_pUserData;
                        
-	std::string        m_active_conn_ip;
-	std::string        m_strIdent;
-	UInt16             m_conn_port;
+    std::string        m_active_conn_ip;
+    std::string        m_strIdent;
+    UInt16             m_conn_port;
     WatcherConnection* m_pHandler; 
 };
 

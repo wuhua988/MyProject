@@ -134,7 +134,7 @@ private:
     UInt16 ext_flags ;
     UInt16 res ;
 	
-	char m_strHead[TMCP_HEAD_LENGTH]; 
+    char m_strHead[TMCP_HEAD_LENGTH]; 
 };
 
 inline char* MsgHeader::ToNet()
@@ -145,17 +145,17 @@ inline char* MsgHeader::ToNet()
 
     m_strHead[pos] = 'T';              pos++;
     m_strHead[pos] = 'M';              pos++;
-	m_strHead[pos] = version;          pos++;
+    m_strHead[pos] = version;          pos++;
     m_strHead[pos] = crypt;            pos++;
-	byte4 = OS_HTONL(length);          memcpy(m_strHead + pos, &byte4, 4); pos += 4;
-	m_strHead[pos] = mode;             pos++;
-	m_strHead[pos] = content_type;     pos++;	
+    byte4 = OS_HTONL(length);          memcpy(m_strHead + pos, &byte4, 4); pos += 4;
+    m_strHead[pos] = mode;             pos++;
+    m_strHead[pos] = content_type;     pos++;	
     byte2 = OS_HTONS(command);         memcpy(m_strHead + pos, &byte2, 2); pos += 2;
-	byte2 = OS_HTONS(app_id);          memcpy(m_strHead + pos, &byte2, 2); pos += 2;
-	byte2 = OS_HTONS(error);           memcpy(m_strHead + pos, &byte2, 2); pos += 2;
+    byte2 = OS_HTONS(app_id);          memcpy(m_strHead + pos, &byte2, 2); pos += 2;
+    byte2 = OS_HTONS(error);           memcpy(m_strHead + pos, &byte2, 2); pos += 2;
     byte4 = OS_HTONL(sequence);        memcpy(m_strHead + pos, &byte4, 4); pos += 4;
     byte2 = OS_HTONS(ext_flags);       memcpy(m_strHead + pos, &byte2, 2); pos += 2;
-	byte2 = OS_HTONS(res);             memcpy(m_strHead + pos, &byte2, 2); pos += 2;
+    byte2 = OS_HTONS(res);             memcpy(m_strHead + pos, &byte2, 2); pos += 2;
     return m_strHead;
 }
 
@@ -165,21 +165,21 @@ inline bool MsgHeader::FromNet(char const* pStrHead)
     UInt16 byte2;
     UInt8  pos = 0;
 	
-	mark[0] = pStrHead[pos];                                        pos++;
-	mark[1] = pStrHead[pos];                                        pos++;
+    mark[0] = pStrHead[pos];                                        pos++;
+    mark[1] = pStrHead[pos];                                        pos++;
     version = pStrHead[pos];                                        pos++;    //UInt8
     crypt = pStrHead[pos];                                          pos++;    //UInt8
-	memcpy(&byte4, pStrHead + pos, 4); length = OS_NTOHL(byte4);    pos += 4; //UInt32 
+    memcpy(&byte4, pStrHead + pos, 4); length = OS_NTOHL(byte4);    pos += 4; //UInt32 
     mode = pStrHead[pos];                                           pos++;    //UInt8
     content_type = pStrHead[pos];                                   pos++;    //UInt8
-	memcpy(&byte2, pStrHead + pos, 2); command = OS_NTOHS(byte2);   pos += 2; //UInt16
-	memcpy(&byte2, pStrHead + pos, 2); app_id = OS_NTOHS(byte2);    pos += 2; //UInt16
+    memcpy(&byte2, pStrHead + pos, 2); command = OS_NTOHS(byte2);   pos += 2; //UInt16
+    memcpy(&byte2, pStrHead + pos, 2); app_id = OS_NTOHS(byte2);    pos += 2; //UInt16
     memcpy(&byte2, pStrHead + pos, 2); error = OS_NTOHS(byte2);     pos += 2; //UInt16
     memcpy(&byte4, pStrHead + pos, 4); sequence = OS_NTOHL(byte4);  pos += 4; //UInt32 
-	memcpy(&byte2, pStrHead + pos, 2); ext_flags = OS_NTOHS(byte2); pos += 2; //UInt16
-	memcpy(&byte2, pStrHead + pos, 2); res = OS_NTOHS(byte2);       pos+=2;   //UInt16
-	
-	if (mark[0] != 'T' || mark[1] != 'M' )
+    memcpy(&byte2, pStrHead + pos, 2); ext_flags = OS_NTOHS(byte2); pos += 2; //UInt16
+    memcpy(&byte2, pStrHead + pos, 2); res = OS_NTOHS(byte2);       pos+=2;   //UInt16
+
+    if (mark[0] != 'T' || mark[1] != 'M' )
         return false;
     return true;
 }

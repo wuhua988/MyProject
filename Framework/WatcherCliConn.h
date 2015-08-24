@@ -10,9 +10,9 @@ public:
 
     virtual int Open (void * arg= 0);
     virtual int HandleEvent(int revents, SOCKET handle = Socket::kInvalidFileDesc);
-	int         HandleReConnect();
-	virtual int HandleTimeOut();
-	virtual int HandleError(OS_Error err);
+    int         HandleReConnect();
+    virtual int HandleTimeOut();
+    virtual int HandleError(OS_Error err);
 };
 
 typedef SharedPtr<WatcherCliConn> WatcherCliConnPtr;

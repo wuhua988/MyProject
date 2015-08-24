@@ -7,10 +7,10 @@ TimerMgr::TimerMgr(EventLoop* pEventLoop,bool bExclusion)
 :m_pEventLoop(pEventLoop)
 ,m_bExclusion(bExclusion)
 {
-   assert(pEventLoop != NULL); 
-   ev_init(&m_timer, CallBack);
-   m_timer.data = this;
-   //CallBack(pEventLoop->GetEvLoop(), &m_timer, 0);
+    assert(pEventLoop != NULL); 
+    ev_init(&m_timer, CallBack);
+    m_timer.data = this;
+    //CallBack(pEventLoop->GetEvLoop(), &m_timer, 0);
 }
 
 TimerMgr::~TimerMgr()
@@ -26,12 +26,12 @@ void TimerMgr::Init()
 
 void TimerMgr::CancelTimeout(Timer* pTimer)
 {
-	Assert(pTimer != NULL);
-	if(m_bExclusion)
-		m_heapMutex.Lock();
+    Assert(pTimer != NULL);
+    if(m_bExclusion)
+        m_heapMutex.Lock();
     m_TimerHeap.Remove(&pTimer->m_timerElem);
-	if(m_bExclusion)
-		m_heapMutex.Unlock();
+    if(m_bExclusion)
+        m_heapMutex.Unlock();
     pTimer->ReSet();    
 }
 
@@ -43,60 +43,60 @@ void TimerMgr::RegTimer(Timer* pTimer)
         LOG_NOTICE("Register Repeat Timer!");
         return;
     }
-    
-	if(m_bExclusion)
-		m_heapMutex.Lock();
-	pTimer->m_timerElem.SetValue(ev_time() + pTimer->GetExpire());
-	//LOG_DEBUG("pTimer->Expire:%f,ElemValue:%ld",pTimer->GetExpire(),pTimer->m_timerElem.GetValue());
+
+    if(m_bExclusion)
+        m_heapMutex.Lock();
+    pTimer->m_timerElem.SetValue(ev_time() + pTimer->GetExpire());
+    //LOG_DEBUG("pTimer->Expire:%f,ElemValue:%ld",pTimer->GetExpire(),pTimer->m_timerElem.GetValue());
     m_TimerHeap.Insert(&pTimer->m_timerElem);
-	if(m_bExclusion)
-		m_heapMutex.Unlock();
+    if(m_bExclusion)
+        m_heapMutex.Unlock();
 }
 
 Timer* TimerMgr::GetTimeOutTimer(ev_tstamp now,int revents)
 {
-	Timer* pTimer = NULL;
-	if(m_bExclusion)
-		m_heapMutex.Lock();
-	if((m_TimerHeap.CurrentHeapSize() > 0) && (m_TimerHeap.PeekMin()->GetValue() <= now))
-	{
-		//Timer* tmp = (Timer*)m_TimerHeap.PeekMin()->GetEnclosingObject();
-		//LOG_DEBUG("TimerHeap->Value:%ld,TimerHeap->Expire:%f"
-		//         ,m_TimerHeap.PeekMin()->GetValue()
-		//		   ,tmp->GetExpire());
-		pTimer = (Timer*)m_TimerHeap.ExtractMin()->GetEnclosingObject();	
+    Timer* pTimer = NULL;
+    if(m_bExclusion)
+        m_heapMutex.Lock();
+    if((m_TimerHeap.CurrentHeapSize() > 0) && (m_TimerHeap.PeekMin()->GetValue() <= now))
+    {
+        //Timer* tmp = (Timer*)m_TimerHeap.PeekMin()->GetEnclosingObject();
+        //LOG_DEBUG("TimerHeap->Value:%ld,TimerHeap->Expire:%f"
+        //         ,m_TimerHeap.PeekMin()->GetValue()
+        //		   ,tmp->GetExpire());
+        pTimer = (Timer*)m_TimerHeap.ExtractMin()->GetEnclosingObject();	
         pTimer->Callback(revents);		
-	}
-	if(m_bExclusion)
-		m_heapMutex.Unlock();
-	return pTimer;
+    }
+    if(m_bExclusion)
+        m_heapMutex.Unlock();
+    return pTimer;
 }
 
 void TimerMgr::Process(struct ev_loop *loop,int revents)
 {
     ev_tstamp after = 5;
     ev_tstamp now = ev_now(loop);	
-	Timer* pTimer = NULL;
-	LOG_DEBUG("TimerMgrItemSize->Size:%u",m_TimerHeap.CurrentHeapSize());
+    Timer* pTimer = NULL;
+    LOG_DEBUG("TimerMgrItemSize->Size:%u",m_TimerHeap.CurrentHeapSize());
     while (1)
     {		
         pTimer = GetTimeOutTimer(now,revents);
         if(!pTimer)
             break;
-		/* if the timer is repeated, put it to the heap again */
-		if(pTimer->Repeat()){
+        /* if the timer is repeated, put it to the heap again */
+        if(pTimer->Repeat()){
             RegTimer(pTimer);
         }
         //pTimer->Callback(revents);
     }
-	
+
     if(m_bExclusion)
-		m_heapMutex.Lock();
+        m_heapMutex.Lock();
     if(m_TimerHeap.CurrentHeapSize() > 0)
         after = m_TimerHeap.PeekMin()->GetValue() - now;
- 	if(m_bExclusion)
-		m_heapMutex.Unlock();
-	
+    if(m_bExclusion)
+        m_heapMutex.Unlock();
+
     LOG_DEBUG("Timer After:%f",after);
     ev_timer_set(&m_timer, after, 0.);
     ev_timer_start(loop, &m_timer);

@@ -46,11 +46,11 @@ UInt32 ConnInfo::GetConnID() const
 
 UInt32 ConnInfo::GetServerID() const
 {
-	return m_pHandler->GetServerID();
+    return m_pHandler->GetServerID();
 }
 
 void ConnInfo::SetServerID(UInt32 uiServerId)
 {
-	m_pHandler->SetServerID(uiServerId);
+    m_pHandler->SetServerID(uiServerId);
     //m_ServerID = uiServerId;
 }

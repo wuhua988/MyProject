@@ -18,13 +18,13 @@ WatcherBase::WatcherBase(EventLoop* evLoop,Framework* pFw)
 {
     //if(evLoop == NULL)
     //{
-	//	LOG_ERROR("ev_loop Is NULL!");
-	//	exit(EXIT_FAILURE);
+    //	LOG_ERROR("ev_loop Is NULL!");
+    //	exit(EXIT_FAILURE);
     //}
 
     ev_init(&m_watcher, WatcherBase::Callback);
-	m_watcher.data = this;
-	m_pThread = NULL;
+    m_watcher.data = this;
+    m_pThread = NULL;
 }
 
 
@@ -39,15 +39,15 @@ WatcherBase::~WatcherBase()
 
 void WatcherBase::StartWatcher() {
     if (!ev_is_active(&m_watcher)){
-      ev_io_start(m_loop->GetEvLoop(), &m_watcher);
-     // LOG_DEBUG("IO Watcher Start Working:0x%x",&m_watcher);
+        ev_io_start(m_loop->GetEvLoop(), &m_watcher);
+        // LOG_DEBUG("IO Watcher Start Working:0x%x",&m_watcher);
     }
 }
 
 void WatcherBase::StopWatcher() {
     if (ev_is_active(&m_watcher)) {
-      ev_io_stop(m_loop->GetEvLoop(), &m_watcher);
-     // LOG_DEBUG("IO Watcher Stop Working:0x%x",&m_watcher);
+        ev_io_stop(m_loop->GetEvLoop(), &m_watcher);
+        // LOG_DEBUG("IO Watcher Stop Working:0x%x",&m_watcher);
     }
 }
 
@@ -60,24 +60,24 @@ void WatcherBase::SetEvent(int events)
 {
     bool active = IsActive();
     if (active)
-	    StopWatcher();
+        StopWatcher();
     ev_io_set(&m_watcher, m_watcher.fd, events);
     if (active)
-	    StartWatcher();
+        StartWatcher();
 }
 
 void WatcherBase::AddEvent(int events)
 {
     if (m_watcher.events & events)
-	    return;
+        return;
     m_watcher.events |= events;
     SetEvent(m_watcher.events);
 }
 
 void WatcherBase::RemoveEvent(int events)
 {
-	if(!(m_watcher.events & events))
-		return;
+    if(!(m_watcher.events & events))
+        return;
     m_watcher.events &= ~events;
     SetEvent(m_watcher.events);    
 }
@@ -105,7 +105,6 @@ SOCKET WatcherBase::GetHandle()
 void WatcherBase::SetConnID(UInt32 connID)
 {
     m_uiConnID = connID;
-    //m_watcher.data = (void*)connID;
 }
 
 UInt32 WatcherBase::GetConnID()
@@ -116,7 +115,6 @@ UInt32 WatcherBase::GetConnID()
 void WatcherBase::SetServerID(UInt32 serverID)
 {
     m_uiServerID = serverID;
-    //m_watcher.data = (void*)connID;
 }
 
 UInt32 WatcherBase::GetServerID()
@@ -145,17 +143,17 @@ void WatcherBase::Callback(EV_P_ ev_io *w, int revents)
     /*UInt32 connID = (UInt32)w->data;
     SharedPtr<WatcherBase> pSharedHandler = gHandlerMgrInst.GetHandler(connID);
     if(pSharedHandler.isNull()){
-        LOG_NOTICE("Can't Find Handler By ConnID:%u",connID);
+    LOG_NOTICE("Can't Find Handler By ConnID:%u",connID);
     }
-    
+
     int ret = pSharedHandler->HandleEvent(revents,w->fd);*/
-    
+
     WatcherBase* pWatcher = (WatcherBase*)w->data;
     int ret = pWatcher->HandleEvent(revents,w->fd);
     if(ret){
-		if(pWatcher->GetServerID() == 0)
+        if(pWatcher->GetServerID() == 0)
             gWatcherMgrInst::instance()->RemoveWatcher(pWatcher->GetConnID());
-		else
-			gCliConnMgr::instance()->Remove(pWatcher->GetConnID());
+        else
+            gCliConnMgr::instance()->Remove(pWatcher->GetConnID());
     }
 }

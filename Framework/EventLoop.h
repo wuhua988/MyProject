@@ -30,9 +30,9 @@ public:
     EventLoop();
     ~EventLoop();
     void            RegTimer(Timer* pTimer);
-	void            AddCheckPending(CheckPending_t* pCPending);
+    void            AddCheckPending(CheckPending_t* pCPending);
     void            CancelTimeout(Timer* pTimer);
-	void            SetTimerMgrExclusion(bool bExclusion);
+    void            SetTimerMgrExclusion(bool bExclusion);
     struct ev_loop* GetEvLoop();
     
     void            Run();
@@ -42,7 +42,7 @@ public:
 private:
     TimerMgr*       m_pTimerMgr;
     struct ev_loop* m_loop;
-	WatcherCheck*   m_pCheck;
+    WatcherCheck*   m_pCheck;
 };
 
 inline const char* EventLoop::GetEventMaskStr(int mask)

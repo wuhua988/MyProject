@@ -14,22 +14,22 @@ Framework::Framework()
 :m_iEventThreadNum(3)
 ,m_iBusinThreadNum(3)
 {
-   
+
 }
 
 Framework::~Framework()
 {
-   
+
 }
 
 int Framework::Init(int eventThreadNum, int businThreadNum)
 {
     if(eventThreadNum >= 0)
-		m_iEventThreadNum = eventThreadNum;
-	if(businThreadNum >= 0)
-		m_iBusinThreadNum = businThreadNum;
+        m_iEventThreadNum = eventThreadNum;
+    if(businThreadNum >= 0)
+        m_iBusinThreadNum = businThreadNum;
     gCliConnMgr::instance()->SetFramework(this);
-   
+
     OS::Initialize();
     OSThread::Initialize();
     SocketUtils::Initialize(false);
@@ -38,36 +38,36 @@ int Framework::Init(int eventThreadNum, int businThreadNum)
 
 int Framework::Run()
 {
-	EventThreadPool::AddThreads(m_iEventThreadNum,EventThreadPool::Type_Work,this);
-	EventThreadPool::AddThreads(m_iBusinThreadNum,EventThreadPool::Type_BusinessTimer,this);
-	return 0;
+    EventThreadPool::AddThreads(m_iEventThreadNum,EventThreadPool::Type_Work,this);
+    EventThreadPool::AddThreads(m_iBusinThreadNum,EventThreadPool::Type_BusinessTimer,this);
+    return 0;
 }
 
 int Framework::NoticeTcpListen(char const* host,UInt16 port)
 {
     EventMasterThread* pThread = EventThreadPool::GetMasterThread();
-	if(!pThread)
-	{
-	    LOG_ERROR("There is no master thread to used!");
+    if(!pThread)
+    {
+        LOG_ERROR("There is no master thread to used!");
         return -1;
-	}
+    }
 
     WatcherListener* pWatcher = new WatcherListener(host,port,pThread->GetEvLoop(),this);
-	pWatcher->SetThread(pThread);
-    
+    pWatcher->SetThread(pThread);
+
     WatcherNoticePipe::AddNoticeToPipe(pThread,WatcherNoticePipe::NOTICE_LISTEN,0,pWatcher);
     return 0;
 }
- 
+
 int Framework::NoticeTcpConnect(UInt32 uiServerID
                                ,char const* szAddr
-							   ,UInt16 iPort
-							   ,UInt32 uiConnNum
-							   ,Float64 fExpire
-							   ,Float64 fInterval
-							   ,void* userData)
+                               ,UInt16 iPort
+                               ,UInt32 uiConnNum
+                               ,Float64 fExpire
+                               ,Float64 fInterval
+                               ,void* userData)
 {
-	gCliConnMgr::instance()->Connect(uiServerID,szAddr,iPort,uiConnNum,fExpire,fInterval);
+    gCliConnMgr::instance()->Connect(uiServerID,szAddr,iPort,uiConnNum,fExpire,fInterval);
     return 0;
 }
 
@@ -86,17 +86,17 @@ int Framework::NoticeCloseConnection(UInt32 uiServerID,UInt32 connID)
 void Framework::SendMsg(MsgBlock* pMsgBlock)
 {
     assert(pMsgBlock != NULL);
-	SharedPtr<WatcherBase> pShareObj;
-	if(pMsgBlock->ServerID() == 0)
+    SharedPtr<WatcherBase> pShareObj;
+    if(pMsgBlock->ServerID() == 0)
         pShareObj = gWatcherMgrInst::instance()->GetWatcher(pMsgBlock->ConnID());
-	else
-		pShareObj = gCliConnMgr::instance()->GetCliConn(pMsgBlock->ServerID(),pMsgBlock->ConnID());
+    else
+        pShareObj = gCliConnMgr::instance()->GetCliConn(pMsgBlock->ServerID(),pMsgBlock->ConnID());
     SharedPtr<WatcherConnection> HandlerConn = pShareObj.cast<WatcherConnection>();
     if(HandlerConn.isNull()){
         LOG_TRACE("Cant't Find Connection Handler by ConnID:%d When Send Message",pMsgBlock->ConnID());
         return;
     }
-    
+
     if(!HandlerConn->SendData(pMsgBlock)){
         WatcherNoticePipe::AddNoticeToPipe(pShareObj->GetThread(),WatcherNoticePipe::NOTICE_EVENT,HandlerConn->GetServerID(),(void*)pMsgBlock->ConnID());
     }
@@ -112,7 +112,7 @@ void Framework::OnMessage(MsgBlock* pMsgBlock)
 
 void Framework::OnSignal(int signum)
 {
-    
+
 }
 
 int Framework::OnConnCreated(ConnInfo* pConnInfo)
@@ -137,24 +137,24 @@ int Framework::OnConnClosed(ConnInfo* pConnInfo)
 
 ConnInfo* Framework::GetConnInfo(UInt32 uiServerID,UInt32 uiConnID)
 {
-	ConnInfo* cif = NULL;
-	SharedPtr<WatcherConnection> connPtr;
-	if(uiServerID == 0)
-	{        
+    ConnInfo* cif = NULL;
+    SharedPtr<WatcherConnection> connPtr;
+    if(uiServerID == 0)
+    {        
         SharedPtr<WatcherBase> pWBase = gWatcherMgrInst::instance()->GetWatcher(uiConnID);
-		if(!pWBase.isNull())
-		    connPtr = pWBase.cast<WatcherConnection>();
-	}
-	else
-	{
-		connPtr = gCliConnMgr::instance()->GetCliConn(uiServerID,uiConnID);
-		
-	}
-	if(!connPtr.isNull())
-	{
-		cif = connPtr->GetConnInfo();		
-	}else{
-		LOG_DEBUG("Can't Find ConnInfo,ServerID:%u,ConnID:%u",uiServerID,uiConnID);
-	}
-	return cif;
+        if(!pWBase.isNull())
+            connPtr = pWBase.cast<WatcherConnection>();
+    }
+    else
+    {
+        connPtr = gCliConnMgr::instance()->GetCliConn(uiServerID,uiConnID);
+
+    }
+    if(!connPtr.isNull())
+    {
+        cif = connPtr->GetConnInfo();		
+    }else{
+        LOG_DEBUG("Can't Find ConnInfo,ServerID:%u,ConnID:%u",uiServerID,uiConnID);
+    }
+    return cif;
 }

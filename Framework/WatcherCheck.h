@@ -21,20 +21,20 @@ public:
         PENDING_NUM         = 1,
     };
 	
-	WatcherCheck(EventLoop* evLoop);
-	virtual ~WatcherCheck();
-
-	virtual int Open(void * arg= 0);
+    WatcherCheck(EventLoop* evLoop);
+    virtual ~WatcherCheck();
+    
+    virtual int Open(void * arg= 0);
     virtual int HandleEvent(int event);
     virtual int Close();	
-	void        AddCheckPending(CheckPending_t* pCPending);
+    void        AddCheckPending(CheckPending_t* pCPending);
 private:
-	void        ProcessCheckPending();
-	static void Callback(struct ev_loop* loop, struct ev_check* instance, int revents);
-	void        NoticeFrameCloseConn(CheckPending_t* pCPending);
-	
-	ev_check        m_check;
-	EventLoop*      m_loop;
-	CheckPending_t* m_CheckPendingHead;
+    void        ProcessCheckPending();
+    static void Callback(struct ev_loop* loop, struct ev_check* instance, int revents);
+    void        NoticeFrameCloseConn(CheckPending_t* pCPending);
+    
+    ev_check        m_check;
+    EventLoop*      m_loop;
+    CheckPending_t* m_CheckPendingHead;
 };
 #endif //__WatcherCheck_h__

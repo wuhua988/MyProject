@@ -7,9 +7,9 @@
 class Timer
 {
 public:
-	//repeat and after are milliseconds
-	Timer();
-	virtual ~Timer();
+    //repeat and after are milliseconds
+    Timer();
+    virtual ~Timer();
     Timer(const Float64 dExpire,const Float64 dInterval);
 	
     void         SetTimer(const Float64 dExpire,const Float64 dInterval);
@@ -22,17 +22,17 @@ public:
     bool         IsTiming();//是否在定时中
     void         ReSet();
 private:
-	// Does not exist
-	Timer(const Timer& other);
-	Timer& operator = (const Timer & other);
+    // Does not exist
+    Timer(const Timer& other);
+    Timer& operator = (const Timer & other);
 
 protected:
     OSHeapElem m_timerElem;
     Float64    m_Expire;
     Float64    m_Interval;
-	//static void WatcherCallback(struct ev_loop   * pLoop,
-	//                            struct ev_timer  * pWatcher,
-	//                            int                iREV);
+    //static void WatcherCallback(struct ev_loop   * pLoop,
+    //                            struct ev_timer  * pWatcher,
+    //                            int                iREV);
     
     friend class TimerMgr;
 };

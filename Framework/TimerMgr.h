@@ -10,7 +10,7 @@ class TimerMgr
 public:   
     TimerMgr(EventLoop* pEventLoop,bool bExclusion = true);
     ~TimerMgr();
-	static void CallBack(struct ev_loop *loop,ev_timer *w,int revents);
+    static void CallBack(struct ev_loop *loop,ev_timer *w,int revents);
     void        RegTimer(Timer* pTimer);
     void        CancelTimeout(Timer* pTimer);
     void        Init();
@@ -18,14 +18,14 @@ public:
 private:
     EventLoop* m_pEventLoop;
     OSHeap     m_TimerHeap;
-	OSMutex    m_heapMutex;
-	ev_timer   m_timer;
-	bool       m_bExclusion;//排他
+    OSMutex    m_heapMutex;
+    ev_timer   m_timer;
+    bool       m_bExclusion;//排他
 private:
     TimerMgr(const TimerMgr& other);
     TimerMgr& operator=(const TimerMgr& other);
-	Timer* GetTimeOutTimer(ev_tstamp now,int revents);
-	friend class EventLoop;
+    Timer* GetTimeOutTimer(ev_tstamp now,int revents);
+    friend class EventLoop;
 };
 
 #endif //__TimerMgr__h__

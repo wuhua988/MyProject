@@ -11,7 +11,7 @@ ClientProtoCmd::ClientProtoCmd(ServerProtoCmd* pServerCmd,Framework* pFramework)
 , m_pServerProtocolCmd(pServerCmd)
 , m_pTimerThread(NULL)
 {
-	
+
 }
 
 ClientProtoCmd::~ClientProtoCmd()
@@ -22,33 +22,33 @@ ClientProtoCmd::~ClientProtoCmd()
 
 void ClientProtoCmd::OnTimer()
 {
-	LOG_NOTICE("OnTimer:Nothing To Do!");
+    LOG_NOTICE("OnTimer:Nothing To Do!");
 }
 
 bool ClientProtoCmd::ScheduleCache(SharedPtr<ProtoCmdBase> cmdPtr,UInt32 uiServerID)
 {
-	LOG_NOTICE("ScheduleCache:Nothing To Do,ServerID:%u",uiServerID);
-	return false;
+    LOG_NOTICE("ScheduleCache:Nothing To Do,ServerID:%u",uiServerID);
+    return false;
 }
 
 void ClientProtoCmd::StartTimer()
 {
-	m_pTimerThread = EventThreadPool::GetRandomTimerThread();
-	if(m_pTimerThread == NULL)
-	{
-		LOG_ERROR("Get BusinessTimerThread From ThreadPool Failed!");
-		return;
-	}
-	m_pTimerThread->RegTimer(&m_timer);
+    m_pTimerThread = EventThreadPool::GetRandomTimerThread();
+    if(m_pTimerThread == NULL)
+    {
+        LOG_ERROR("Get BusinessTimerThread From ThreadPool Failed!");
+        return;
+    }
+    m_pTimerThread->RegTimer(&m_timer);
 }
 
 void ClientProtoCmd::StopTimer()
 {
-	if(m_pTimerThread == NULL)
-	{
-		LOG_ERROR("BusinessTimerThread Is NULL Can't Stop Timer!");
-		return;
-	}
-	m_pTimerThread->CancelTimeout(&m_timer);
+    if(m_pTimerThread == NULL)
+    {
+        LOG_ERROR("BusinessTimerThread Is NULL Can't Stop Timer!");
+        return;
+    }
+    m_pTimerThread->CancelTimeout(&m_timer);
 }
 

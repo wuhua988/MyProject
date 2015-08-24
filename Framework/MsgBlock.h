@@ -8,16 +8,16 @@ public:
     MsgBlock(size_t len,UInt32 uiServerID,UInt32 uiConnID,const MsgHeader& header);
 	
 	inline char*       rd_ptr (void) const;
-	inline void        rd_ptr (size_t n);
-	inline char*       wr_ptr (void) const ;
-	inline void        wr_ptr(size_t n) ;
-	inline char*       get_ptr (void) const;
-	inline size_t      length(void) const ;
+    inline void        rd_ptr (size_t n);
+    inline char*       wr_ptr (void) const ;
+    inline void        wr_ptr(size_t n) ;
+    inline char*       get_ptr (void) const;
+    inline size_t      length(void) const ;
     inline size_t      rd_pos(void) const ;
     inline UInt32      ConnID() const;
-	inline UInt32      ServerID() const;
-	inline MsgHeader*  Header();
-	OSQueueElem m_QueueElem;
+    inline UInt32      ServerID() const;
+    inline MsgHeader*  Header();
+    OSQueueElem m_QueueElem;
     
     static MsgBlock* PackMsg(MsgHeader& header
 	                        ,char const* strData
@@ -30,9 +30,9 @@ private:
     size_t    m_rdPos; //读位置
     size_t    m_wrPos; //写位置
     size_t    m_len;   //m_buf大小
-	UInt32    m_connID;
-	UInt32    m_serverID;
-	MsgHeader m_header;	
+    UInt32    m_connID;
+    UInt32    m_serverID;
+    MsgHeader m_header;	
 };
 
 inline char *MsgBlock::rd_ptr (void) const

@@ -8,7 +8,7 @@ Task::Task()
 : m_taskQueueElem()
 , m_timer(this,5,5)
 {
-	m_taskQueueElem.SetEnclosingObject(this);
+    m_taskQueueElem.SetEnclosingObject(this);
 }
 
 void Task::Signal()
@@ -24,7 +24,7 @@ void Task::Signal()
 
 void Task::SetTaskName(char* name)
 {
-	if (name == NULL)
+    if (name == NULL)
         return;
     ::strncpy(m_taskName,name,sizeof(m_taskName));
     m_taskName[sizeof(m_taskName) -1] = 0; //terminate in case it is longer than m_taskName.
@@ -33,7 +33,7 @@ void Task::SetTaskName(char* name)
 void TaskThread::Entry()
 {
     Task* theTask = NULL;
-    
+
     while(true) 
     {
         theTask = FetchTask();
@@ -43,7 +43,7 @@ void TaskThread::Entry()
         SInt64 ret = 0;
         LOG_DEBUG("TaskThread run TaskName=%s", theTask->m_taskName);
         ret = theTask->Run();
-        
+
         if (ret < 0){}
         else if (ret == 0){}
         else{}        
@@ -73,7 +73,7 @@ Bool16 TaskThreadPool::AddThreads(UInt32 numToAdd)
 {
     Assert(m_sTaskThreadArray == NULL);
     m_sTaskThreadArray = new TaskThread * [numToAdd];
-        
+
     for (UInt32 x = 0; x < numToAdd; x++)
     {
         m_sTaskThreadArray[x] = new TaskThread();
@@ -94,20 +94,20 @@ void TaskThreadPool::RemoveThreads()
     //all the threads, signalling each one
     for(UInt32 y = 0; y < m_sNumTaskThreads; y++)
         m_sTaskThreadArray[y]->m_taskQueue.GetCond()->Signal();
-    
+
     //Ok, now wait for the selected threads to terminate, deleting them and removing
     //them from the queue.
     for (UInt32 z = 0; z < m_sNumTaskThreads; z++)
         delete m_sTaskThreadArray[z];
-    
+
     m_sNumTaskThreads = 0;
 }
 
 TaskThread* TaskThreadPool::GetTaskThread()
 {
-	static int last_thread = - 1;
+    static int last_thread = - 1;
     int index = (last_thread + 1) % m_sNumTaskThreads;
     TaskThread *pThread = m_sTaskThreadArray[index];
     last_thread = index;
-	return pThread;
+    return pThread;
 }

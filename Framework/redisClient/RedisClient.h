@@ -42,7 +42,7 @@ private:
     RedisClient(const RedisClient &);
     RedisClient& operator=(const RedisClient &);
 	
-	RedisPoolCluster* m_pRedisPoolCluster;
+    RedisPoolCluster* m_pRedisPoolCluster;
 private:
     bool        Recv_OK_Reply(RedisConnection* pRedisConn);
     void        Recv_Int_OK_Reply(RedisConnection* pRedisConn);
@@ -53,8 +53,8 @@ private:
     int_type    Recv_Multi_Bulk_Reply(string_set & out,RedisConnection* pRedisConn);
     int_type    Recv_Int_Reply(RedisConnection* pRedisConn);
 	
-	bool RecvLine(RedisConnection* pRedisConn,std::string& strLine);
-	SharedPtr<RedisConnection> GetRedisConnection();
+    bool RecvLine(RedisConnection* pRedisConn,std::string& strLine);
+    SharedPtr<RedisConnection> GetRedisConnection();
 };
 
 #endif // __Command_h__

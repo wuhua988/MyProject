@@ -21,13 +21,13 @@ public:
 	};
 	
 public:   
-	static void               RegisterPbMsg(const UInt32& cmdID,const std::string& name);	
+    static void               RegisterPbMsg(const UInt32& cmdID,const std::string& name);	
     static SharedPtr<Message> ParsePBMsg(const char *data, int len, const UInt32& cmdID, ErrorCode *error);
     static SharedPtr<Message> CreateMsg(const std::string &msgTypeName);
     static const std::string &ErrorToStr(ErrorCode error);
 private:
     static std::map<UInt32,std::string> m_Cmd2NameMap;
-	static bool GetNameByCmdID(int cmdID,std::string& TypeName);
+    static bool GetNameByCmdID(int cmdID,std::string& TypeName);
 };
 
 #endif  //_PBReflect_h_

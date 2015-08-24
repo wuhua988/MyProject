@@ -13,9 +13,9 @@ class Framework;
 class WatcherBase
 {
 public:	
-	virtual ~WatcherBase();	
-	WatcherBase();
-	WatcherBase(EventLoop* p_loop,Framework* pFw = NULL);
+    virtual ~WatcherBase();	
+    WatcherBase();
+    WatcherBase(EventLoop* p_loop,Framework* pFw = NULL);
 	
     void             SetThread(EventBaseThread* pThread);   
     EventBaseThread* GetThread();   
@@ -26,7 +26,7 @@ public:
     virtual SOCKET   GetHandle();
     void             SetConnID(UInt32 connID);
     UInt32           GetConnID();
-	void             SetServerID(UInt32 serverID);
+    void             SetServerID(UInt32 serverID);
     UInt32           GetServerID();
     Framework*       GetFramework();
     static void      Callback(EV_P_ ev_io *watcher, int revents);    
@@ -34,18 +34,18 @@ public:
 protected:
     void             StartWatcher();
     void             StopWatcher();
-	void             SetEvent(int events);
+    void             SetEvent(int events);
     void             RemoveEvent(int events);
-	bool             IsActive() const;
-	bool             IsPending() const;
+    bool             IsActive() const;
+    bool             IsPending() const;
 
     ev_io            m_watcher;
-	EventLoop*       m_loop;
+    EventLoop*       m_loop;
     EventBaseThread* m_pThread;
     //SOCKET m_handle;
     UInt32           m_uiConnID;
-	UInt32           m_uiServerID;
+    UInt32           m_uiServerID;
     bool             m_bIsClose;
-	Framework*       m_pFrameWork;
+    Framework*       m_pFrameWork;
 };
 #endif //__WatcherBase_h__
