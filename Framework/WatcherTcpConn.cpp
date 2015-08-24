@@ -179,10 +179,13 @@ int WatcherTcpConn::HandleWrite()
             OSQueueElem* pElem = GetMsg();
             if(pElem){
                 m_pSendMsgCur = (MsgBlock*)pElem->GetEnclosingObject();
-                LOG_DEBUG("Get An Message From Queue,Remained:%u,ConnID:%u",m_MsgQueue.GetLength(),m_pSendMsgCur->ConnID());
+                LOG_DEBUG("Get An Message From Queue,Remained:%u,ConnID:%u"
+				         ,m_MsgQueue.GetLength()
+						 ,m_pSendMsgCur->ConnID());
             } else {
                 RemoveEvent(EventLoop::EventMask_Write);
-                LOG_DEBUG("There Are No Msg To Send,And Remove The Write Event,ConnID:%d",m_uiConnID);
+                LOG_DEBUG("There Are No Msg To Send,And Remove The Write Event,ConnID:%d"
+				         ,m_uiConnID);
                 break;
             }
         }
@@ -230,7 +233,10 @@ bool WatcherTcpConn::SendData(MsgBlock* pMsgBlock)
                 sendSuccess = true;
             }
         } else {
-            LOG_DEBUG("Error Happend when Send Packet,ErrNo:%d,ErrString:%s,ConnID:%u",err,strerror(err),m_uiConnID);
+            LOG_DEBUG("Error Happend when Send Packet,ErrNo:%d,ErrString:%s,ConnID:%u"
+			         ,err
+					 ,strerror(err)
+					 ,m_uiConnID);
             delete pMsgBlock;
         }
     }
@@ -239,21 +245,29 @@ bool WatcherTcpConn::SendData(MsgBlock* pMsgBlock)
         LOG_DEBUG("There are %u Message Remained!",m_MsgQueue.GetLength());
         m_MsgQueue.EnQueue(&pMsgBlock->m_QueueElem);
     }
-    LOG_DEBUG("Send Packet To Client By ConnID:%u,Once:%s",m_uiConnID,sendSuccess ? "Yes" : "NO");
+    LOG_DEBUG("Send Packet To Client By ConnID:%u,Once:%s"
+	         ,m_uiConnID,sendSuccess ? "Yes" : "NO");
     return sendSuccess;
 }
 
 int WatcherTcpConn::HandleError(OS_Error err)
 {
     //if(err == ENOTCONN){
-    LOG_WARN("HandleError,Error Number:%d,Error String:%s,ConnID:%u",err,strerror(err),m_uiConnID);
+    LOG_WARN("HandleError,Error Number:%d,Error String:%s,ConnID:%u"
+	        ,err
+			,strerror(err)
+			,m_uiConnID);
     LOG_DEBUG("Close The Connection!connID:%u",m_uiConnID);
     return 1;
 }
 
 int WatcherTcpConn::HandleTimeOut()
 {
-    LOG_WARN("IP:%s,Port:%d,is Time Out!,ServerID:%u,ConnID:%d",m_connInfo.GetRemoteAddr().c_str(),m_connInfo.GetRemotePort(),GetServerID(),m_uiConnID);
+    LOG_WARN("IP:%s,Port:%d,is Time Out!,ServerID:%u,ConnID:%d"
+	        ,m_connInfo.GetRemoteAddr().c_str()
+			,m_connInfo.GetRemotePort()
+			,GetServerID()
+			,m_uiConnID);
     return 1;
 }
 

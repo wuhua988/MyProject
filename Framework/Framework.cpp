@@ -79,7 +79,10 @@ int Framework::NoticeCloseConnection(UInt32 uiServerID,UInt32 connID)
     }
     PointerSizedUInt pConnID = connID;
     //intptr_t或uintptr_t中,int i2 = *((int*)&aatta);
-    WatcherNoticePipe::AddNoticeToPipe(pShareObj->GetThread(),WatcherNoticePipe::NOTICE_CLOSE_CONN,uiServerID,(void*)pConnID);
+    WatcherNoticePipe::AddNoticeToPipe(pShareObj->GetThread()
+	                                  ,WatcherNoticePipe::NOTICE_CLOSE_CONN
+									  ,uiServerID
+									  ,(void*)pConnID);
     return 0;
 }
 
@@ -98,7 +101,10 @@ void Framework::SendMsg(MsgBlock* pMsgBlock)
     }
 
     if(!HandlerConn->SendData(pMsgBlock)){
-        WatcherNoticePipe::AddNoticeToPipe(pShareObj->GetThread(),WatcherNoticePipe::NOTICE_EVENT,HandlerConn->GetServerID(),(void*)pMsgBlock->ConnID());
+        WatcherNoticePipe::AddNoticeToPipe(pShareObj->GetThread()
+		                                  ,WatcherNoticePipe::NOTICE_EVENT
+										  ,HandlerConn->GetServerID()
+										  ,(void*)pMsgBlock->ConnID());
     }
 }
 
@@ -118,20 +124,26 @@ void Framework::OnSignal(int signum)
 int Framework::OnConnCreated(ConnInfo* pConnInfo)
 {
     assert(pConnInfo != NULL);
-    LOG_DEBUG("ConnCreated Remote IP:%s,Remote Port:%d",pConnInfo->GetRemoteAddr().c_str(),pConnInfo->GetRemotePort());
+    LOG_DEBUG("ConnCreated Remote IP:%s,Remote Port:%d"
+	         ,pConnInfo->GetRemoteAddr().c_str()
+			 ,pConnInfo->GetRemotePort());
     return 0;
 }
 
 int Framework::OnFailConnect(ConnInfo* pConnInfo)
 {
     assert(pConnInfo != NULL);
-    LOG_DEBUG("FailConnect Remote IP:%s,Remote Port:%d,And Conitnue to Connect it!",pConnInfo->GetRemoteAddr().c_str(),pConnInfo->GetRemotePort());
+    LOG_DEBUG("FailConnect Remote IP:%s,Remote Port:%d,And Conitnue to Connect it!"
+	         ,pConnInfo->GetRemoteAddr().c_str()
+			 ,pConnInfo->GetRemotePort());
     return 0;
 }
 int Framework::OnConnClosed(ConnInfo* pConnInfo)
 {
     assert(pConnInfo != NULL);
-    LOG_DEBUG("ConnClosed Remote IP:%s,Remote Port:%d",pConnInfo->GetRemoteAddr().c_str(),pConnInfo->GetRemotePort());
+    LOG_DEBUG("ConnClosed Remote IP:%s,Remote Port:%d"
+	         ,pConnInfo->GetRemoteAddr().c_str()
+			 ,pConnInfo->GetRemotePort());
     return 0;
 }
 

@@ -233,7 +233,8 @@ bool HostService::Close(UInt32 connID)
     mapStr2Host::iterator iter = m_clientHost.find(ccPtr->GetConnInfo()->GetConnIdent());
     if(iter == m_clientHost.end())
     {
-        LOG_ERROR("Can't Find Host Form ClientHostMap,Ident:%s",ccPtr->GetConnInfo()->GetConnIdent().c_str());
+        LOG_ERROR("Can't Find Host Form ClientHostMap,Ident:%s"
+		         ,ccPtr->GetConnInfo()->GetConnIdent().c_str());
         return false;
     }
 
@@ -290,7 +291,10 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
 
         if(hsPtr.isNull())
         {
-            LOG_ERROR("HostService Is NULL,ServerID:%u,Host:%s,Port:%d",uiServerID,strHost,uiPort);
+            LOG_ERROR("HostService Is NULL,ServerID:%u,Host:%s,Port:%d"
+			         ,uiServerID
+					 ,strHost
+					 ,uiPort);
             return false;
         }
         isOK = hsPtr->AddCliConn(strHost,uiPort,fExpire,fInterval);	
@@ -301,7 +305,9 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
         EventWorkThread* pThread = EventThreadPool::GetRandomWorkThread();
         if(!pThread)
         {
-            LOG_ERROR("Get Null Thread From EventWorkThreadPool When Client Connect,Host:%s,Port:%d",strHost,uiPort);
+            LOG_ERROR("Get Null Thread From EventWorkThreadPool When Client Connect,Host:%s,Port:%d"
+			         ,strHost
+					 ,uiPort);
             return false;
         }
         WatcherCliConn* pWatcher = new WatcherCliConn(pThread->GetEvLoop(),m_pFramework);
@@ -316,7 +322,10 @@ bool ClientConnMgr::Connect(UInt32  uiServerID
         oss << strHost << ':' << uiPort;
         pWatcher->GetConnInfo()->SetConnIdent(oss.str());
 
-        WatcherNoticePipe::AddNoticeToPipe(pThread,WatcherNoticePipe::NOTICE_TCP_CLIENT,uiServerID,pWatcher);
+        WatcherNoticePipe::AddNoticeToPipe(pThread
+		                                  ,WatcherNoticePipe::NOTICE_TCP_CLIENT
+										  ,uiServerID
+										  ,pWatcher);
     }	
 
     return isOK;
@@ -443,7 +452,9 @@ bool ClientConnMgr::AddCliConn(WatcherCliConnPtr pConn)
         mapConnID2Conn::iterator iter = m_ConnID2Conn.find(pConn->GetConnID());
         if(iter != m_ConnID2Conn.end())
         {
-            LOG_ERROR("This Connection Already Exists In ClientConnMgr,ServerID:%u,ConnID:%d",pConn->GetServerID(),pConn->GetConnID());
+            LOG_ERROR("This Connection Already Exists In ClientConnMgr,ServerID:%u,ConnID:%d"
+			         ,pConn->GetServerID()
+					 ,pConn->GetConnID());
             return false;
         }
 
@@ -458,7 +469,9 @@ bool ClientConnMgr::AddCliConn(WatcherCliConnPtr pConn)
             if(!(iterService->second->AddCliConnToHost(pConn)))
                 return false;
         }else{
-            LOG_ERROR("Can't Find ClientHost From ClientConnMgr,ServerID:%u,ConnID:%d",pConn->GetServerID(),pConn->GetConnID());
+            LOG_ERROR("Can't Find ClientHost From ClientConnMgr,ServerID:%u,ConnID:%d"
+			         ,pConn->GetServerID()
+					 ,pConn->GetConnID());
             return false;
         }
     }
@@ -471,7 +484,9 @@ WatcherCliConnPtr ClientConnMgr::GetCliConnPtr(UInt32 uiServerID,UInt32 uiConnID
     WatcherCliConnPtr ccPtr = gCliConnMgr::instance()->GetCliConn(uiServerID,uiConnID);
     if(ccPtr.isNull())
     {
-        LOG_ERROR("Can't Find Clent Connection From ClientConnMgr,ServerID:%u,ConnID:%u",uiServerID,uiConnID);
+        LOG_ERROR("Can't Find Clent Connection From ClientConnMgr,ServerID:%u,ConnID:%u"
+		         ,uiServerID
+				 ,uiConnID);
     }
     return ccPtr;
 }

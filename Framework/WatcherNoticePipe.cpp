@@ -199,12 +199,17 @@ SharedPtr<WatcherBase> WatcherNoticePipe::GetWatcherByNoticeConnID(Notice* notic
         watchObj = gCliConnMgr::instance()->GetCliConn(notice->serverID,pConnID);
     if(watchObj.isNull())
     {
-        LOG_ERROR("Can't Find Wacher ServerID:%u,ConnID:%u",notice->serverID,pConnID);
+        LOG_ERROR("Can't Find Wacher ServerID:%u,ConnID:%u"
+		         ,notice->serverID
+				 ,pConnID);
     }
     return watchObj;
 }
 
-void WatcherNoticePipe::AddNoticeToPipe(EventBaseThread* pThread,UInt32 type,UInt32 svrid,void* arg)
+void WatcherNoticePipe::AddNoticeToPipe(EventBaseThread* pThread
+                                       ,UInt32 type
+									   ,UInt32 svrid
+									   ,void* arg)
 {
     assert(pThread != NULL);
     assert(arg != NULL);

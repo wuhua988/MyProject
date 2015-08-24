@@ -32,7 +32,10 @@ int WatcherCliConn::Open(void * arg)
 
     if(m_socket.GetSocketFD() == Socket::kInvalidFileDesc){
         LOG_ERROR("WatcherCliConn::Open,Socket FD is Invalid,RemoteIP:%s,RemotePort:%d,ServerID:%u,ConnID:%u"
-            ,m_connInfo.GetRemoteAddr().c_str(),m_connInfo.GetRemotePort(),GetServerID(),GetConnID());
+                 ,m_connInfo.GetRemoteAddr().c_str()
+			     ,m_connInfo.GetRemotePort()
+				 ,GetServerID()
+				 ,GetConnID());
         return 1;
     }
 
@@ -54,7 +57,10 @@ int WatcherCliConn::HandleEvent(int revents, SOCKET handle)
     if(m_connInfo.GetState() == ConnInfo::STATUS_CONNECTING)
     {        
         int socket_result = m_socket.GetSocketError();
-        MACRO_WARN(socket_result,"Socket Error ConnID:%d, Error Num:%d,Str:%s",m_uiConnID,socket_result,strerror(socket_result));
+        MACRO_WARN(socket_result,"Socket Error ConnID:%d, Error Num:%d,Str:%s"
+		          ,m_uiConnID
+				  ,socket_result
+				  ,strerror(socket_result));
         if(socket_result == 0)
         {
             m_connInfo.SetState(ConnInfo::STATUS_CONNECTED);
@@ -87,14 +93,20 @@ int WatcherCliConn::HandleEvent(int revents, SOCKET handle)
 
 int WatcherCliConn::HandleReConnect()
 {
-    MACRO_DEBUG(m_connInfo.IsActive(),"HandleReConnect ServerID:%u,ConnID:%d",GetServerID(),m_uiConnID);
+    MACRO_DEBUG(m_connInfo.IsActive(),"HandleReConnect ServerID:%u,ConnID:%d"
+	           ,GetServerID()
+			   ,m_uiConnID);
     Close();
     return Open();
 }
 
 int WatcherCliConn::HandleError(OS_Error err)
 {
-    LOG_WARN("Client Connect,Error Number:%d,Error String:%s,ServerID:%u,ConnID:%u",err,strerror(err),GetServerID(),m_uiConnID);
+    LOG_WARN("Client Connect,Error Number:%d,Error String:%s,ServerID:%u,ConnID:%u"
+	        ,err
+			,strerror(err)
+			,GetServerID()
+			,m_uiConnID);
     return HandleReConnect();
 }
 
@@ -102,10 +114,16 @@ int WatcherCliConn::HandleTimeOut()
 {
     LOG_WARN("HandleTimeOut,ConnID:%u",m_uiConnID);
     if(m_connInfo.GetState() == ConnInfo::STATUS_CONNECTING ){    	
-        LOG_WARN("Connect To IP:%s,Port:%d,Faild!,ServerID:%u,ConnID:%d",m_connInfo.GetRemoteAddr().c_str(),m_connInfo.GetRemotePort(),m_uiConnID);
+        LOG_WARN("Connect To IP:%s,Port:%d,Faild!,ServerID:%u,ConnID:%d"
+		        ,m_connInfo.GetRemoteAddr().c_str()
+				,m_connInfo.GetRemotePort()
+				,m_uiConnID);
         return HandleReConnect();
     }else{
-        LOG_WARN("IP:%s,Port:%d,is Time Out!,ConnID:%d",m_connInfo.GetRemoteAddr().c_str(),m_connInfo.GetRemotePort(),m_uiConnID);
+        LOG_WARN("IP:%s,Port:%d,is Time Out!,ConnID:%d"
+		        ,m_connInfo.GetRemoteAddr().c_str()
+				,m_connInfo.GetRemotePort()
+				,m_uiConnID);
         return 1;
     } 
     return 0;
