@@ -522,6 +522,7 @@ message UpdateUserInfoRequest
 	optional string city = 11;			// 城市 - 所在地
 	optional string personal_desc = 12;	// 个人说明*
 	optional string real_name = 13;		// 真实姓名*
+	optional string token = 14;         // token
 }
 // 修改个人资料响应
 message UpdateUserInfoResponse

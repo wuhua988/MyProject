@@ -7263,6 +7263,18 @@ class UpdateUserInfoRequest : public ::google::protobuf::Message {
   inline ::std::string* release_real_name();
   inline void set_allocated_real_name(::std::string* real_name);
 
+  // optional string token = 14;
+  inline bool has_token() const;
+  inline void clear_token();
+  static const int kTokenFieldNumber = 14;
+  inline const ::std::string& token() const;
+  inline void set_token(const ::std::string& value);
+  inline void set_token(const char* value);
+  inline void set_token(const char* value, size_t size);
+  inline ::std::string* mutable_token();
+  inline ::std::string* release_token();
+  inline void set_allocated_token(::std::string* token);
+
   // @@protoc_insertion_point(class_scope:umsProtocol.UpdateUserInfoRequest)
  private:
   inline void set_has_user_id();
@@ -7291,6 +7303,8 @@ class UpdateUserInfoRequest : public ::google::protobuf::Message {
   inline void clear_has_personal_desc();
   inline void set_has_real_name();
   inline void clear_has_real_name();
+  inline void set_has_token();
+  inline void clear_has_token();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -7308,6 +7322,7 @@ class UpdateUserInfoRequest : public ::google::protobuf::Message {
   ::std::string* city_;
   ::std::string* personal_desc_;
   ::std::string* real_name_;
+  ::std::string* token_;
   ::google::protobuf::uint32 constellation_;
   friend void  protobuf_AddDesc_user_5fmanagement_5fservice_2eproto();
   friend void protobuf_AssignDesc_user_5fmanagement_5fservice_2eproto();
@@ -20476,6 +20491,82 @@ inline void UpdateUserInfoRequest::set_allocated_real_name(::std::string* real_n
     real_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:umsProtocol.UpdateUserInfoRequest.real_name)
+}
+
+// optional string token = 14;
+inline bool UpdateUserInfoRequest::has_token() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void UpdateUserInfoRequest::set_has_token() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void UpdateUserInfoRequest::clear_has_token() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void UpdateUserInfoRequest::clear_token() {
+  if (token_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    token_->clear();
+  }
+  clear_has_token();
+}
+inline const ::std::string& UpdateUserInfoRequest::token() const {
+  // @@protoc_insertion_point(field_get:umsProtocol.UpdateUserInfoRequest.token)
+  return *token_;
+}
+inline void UpdateUserInfoRequest::set_token(const ::std::string& value) {
+  set_has_token();
+  if (token_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    token_ = new ::std::string;
+  }
+  token_->assign(value);
+  // @@protoc_insertion_point(field_set:umsProtocol.UpdateUserInfoRequest.token)
+}
+inline void UpdateUserInfoRequest::set_token(const char* value) {
+  set_has_token();
+  if (token_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    token_ = new ::std::string;
+  }
+  token_->assign(value);
+  // @@protoc_insertion_point(field_set_char:umsProtocol.UpdateUserInfoRequest.token)
+}
+inline void UpdateUserInfoRequest::set_token(const char* value, size_t size) {
+  set_has_token();
+  if (token_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    token_ = new ::std::string;
+  }
+  token_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:umsProtocol.UpdateUserInfoRequest.token)
+}
+inline ::std::string* UpdateUserInfoRequest::mutable_token() {
+  set_has_token();
+  if (token_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    token_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:umsProtocol.UpdateUserInfoRequest.token)
+  return token_;
+}
+inline ::std::string* UpdateUserInfoRequest::release_token() {
+  clear_has_token();
+  if (token_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = token_;
+    token_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void UpdateUserInfoRequest::set_allocated_token(::std::string* token) {
+  if (token_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete token_;
+  }
+  if (token) {
+    set_has_token();
+    token_ = token;
+  } else {
+    clear_has_token();
+    token_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:umsProtocol.UpdateUserInfoRequest.token)
 }
 
 // -------------------------------------------------------------------

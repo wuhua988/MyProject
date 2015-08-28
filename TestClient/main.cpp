@@ -15,6 +15,7 @@
 #include "TestCaseCtx.h"
 #include "UserAuthCommand.h"
 #include "ClientConnectionMgr.h"
+#include "FileReader.h"
 
 const char* history_path = "history.txt";
 void        Reg_PBReflect();
@@ -33,7 +34,6 @@ void PrintTestInfo();
 std::vector<SharedPtr<SendCmdThread> > gThreadVec;
 int main(int argc, char * argv[]) 
 {
-    //Initialize utility classes
     log_init(LL_DEBUG, "log", "./");
     Reg_PBReflect();
     gTestCliFw::instance()->Init(5,5);
@@ -43,6 +43,11 @@ int main(int argc, char * argv[])
     Setup_Limit();
     Trace_ARGC_ARGV(argc,argv);
     TestCaseCtx::regCmd();
+	
+	FileReader reader("./example.dat");
+    reader.ReadValues();
+    gConfigPtr::instance()->m_rows = reader.getData();
+	
     int threadNum = gConfigPtr::instance()->m_cmdThreadNum;
     for(int i = 0; i < threadNum; i++)
     {
@@ -352,22 +357,22 @@ void PrintTestInfo()
 {
     UInt32 reqNum = ProtoCmdBase::GetSeqID() - gTestCaseCtxPtr::instance()->m_StartReqNum.value();
     printf("Test Information\n"
-        "Send Request     :%u\n"
-        "receive Response :%u\n"
-        "Timeout          :%u\n"
-        "Cost             :%ld\n"
-        "Min              :%ld\n"
-        "Max              :%ld\n"
-        "Avg              :%ld\n"
-        "Create Cmd Objs  :%u\n"
-        "Delete Cmd Objs  :%u\n",
-        reqNum,
-        gTestCaseCtxPtr::instance()->m_ResponseNum.value(),
-        gTestCaseCtxPtr::instance()->m_timeoutNum.value(),
-        gTestCaseCtxPtr::instance()->GetEndTime() - gTestCaseCtxPtr::instance()->GetStartTime(),
-        gTestCaseCtxPtr::instance()->GetMinTime(),
-        gTestCaseCtxPtr::instance()->GetMaxTime(),
-        gTestCaseCtxPtr::instance()->GetTotle() / reqNum,
-        gTestCaseCtxPtr::instance()->m_createCmdObjs.value(),
-        gTestCaseCtxPtr::instance()->m_deleteCmdObjs.value());		   
+          "Send Request     :%u\n"
+          "receive Response :%u\n"
+          "Timeout          :%u\n"
+          "Cost             :%ld\n"
+          "Min              :%ld\n"
+          "Max              :%ld\n"
+          "Avg              :%ld\n"
+          "Create Cmd Objs  :%u\n"
+          "Delete Cmd Objs  :%u\n",
+          reqNum,
+          gTestCaseCtxPtr::instance()->m_ResponseNum.value(),
+          gTestCaseCtxPtr::instance()->m_timeoutNum.value(),
+          gTestCaseCtxPtr::instance()->GetEndTime() - gTestCaseCtxPtr::instance()->GetStartTime(),
+          gTestCaseCtxPtr::instance()->GetMinTime(),
+          gTestCaseCtxPtr::instance()->GetMaxTime(),
+          gTestCaseCtxPtr::instance()->GetTotle() / reqNum,
+          gTestCaseCtxPtr::instance()->m_createCmdObjs.value(),
+          gTestCaseCtxPtr::instance()->m_deleteCmdObjs.value());		   
 }

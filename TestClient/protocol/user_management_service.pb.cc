@@ -1418,7 +1418,7 @@ void protobuf_AssignDesc_user_5fmanagement_5fservice_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GetGroupInfoResponse));
   UpdateUserInfoRequest_descriptor_ = file->message_type(63);
-  static const int UpdateUserInfoRequest_offsets_[13] = {
+  static const int UpdateUserInfoRequest_offsets_[14] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, user_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, nick_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, sex_),
@@ -1432,6 +1432,7 @@ void protobuf_AssignDesc_user_5fmanagement_5fservice_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, city_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, personal_desc_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, real_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateUserInfoRequest, token_),
   };
   UpdateUserInfoRequest_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -2513,75 +2514,76 @@ void protobuf_AddDesc_user_5fmanagement_5fservice_2eproto() {
     "_notice\030\007 \001(\t\022\016\n\006avatar\030\010 \001(\t\022#\n\006result\030"
     "\t \002(\0132\023.umsProtocol.Result\022\020\n\010sub_type\030\n"
     " \001(\r\022\024\n\014group_number\030\013 \001(\004\022\021\n\tavatar_id\030"
-    "\014 \001(\r\022\020\n\010owner_id\030\r \001(\004\"\361\001\n\025UpdateUserIn"
+    "\014 \001(\r\022\020\n\010owner_id\030\r \001(\004\"\200\002\n\025UpdateUserIn"
     "foRequest\022\017\n\007user_id\030\001 \002(\004\022\021\n\tnick_name\030"
     "\002 \001(\t\022\013\n\003sex\030\003 \001(\r\022\016\n\006mobile\030\004 \001(\t\022\020\n\010bi"
     "rthday\030\005 \001(\t\022\r\n\005email\030\006 \001(\t\022\013\n\003age\030\007 \001(\r"
     "\022\025\n\rconstellation\030\010 \001(\r\022\014\n\004sign\030\t \001(\t\022\014\n"
     "\004like\030\n \001(\t\022\014\n\004city\030\013 \001(\t\022\025\n\rpersonal_de"
-    "sc\030\014 \001(\t\022\021\n\treal_name\030\r \001(\t\"=\n\026UpdateUse"
-    "rInfoResponse\022#\n\006result\030\001 \002(\0132\023.umsProto"
-    "col.Result\"6\n\025UpdateUserMoodRequest\022\017\n\007u"
-    "ser_id\030\001 \002(\004\022\014\n\004mood\030\002 \001(\t\"=\n\026UpdateUser"
-    "MoodResponse\022#\n\006result\030\001 \002(\0132\023.umsProtoc"
-    "ol.Result\"\?\n\031UpdateUserNickNameRequest\022\017"
-    "\n\007user_id\030\001 \002(\004\022\021\n\tnick_name\030\002 \001(\t\"A\n\032Up"
-    "dateUserNickNameResponse\022#\n\006result\030\001 \002(\013"
-    "2\023.umsProtocol.Result\"I\n\023UpdateAvatarReq"
-    "uest\022\017\n\007user_id\030\001 \002(\004\022\021\n\tavatar_id\030\002 \001(\r"
-    "\022\016\n\006avatar\030\003 \001(\t\";\n\024UpdateAvatarResponse"
-    "\022#\n\006result\030\001 \002(\0132\023.umsProtocol.Result\"<\n"
-    "\027GetGroupUserInfoRequest\022\020\n\010group_id\030\001 \002"
-    "(\004\022\017\n\007user_id\030\002 \003(\004\"\210\001\n\030GetGroupUserInfo"
-    "Response\022#\n\006result\030\001 \002(\0132\023.umsProtocol.R"
-    "esult\022\020\n\010group_id\030\002 \001(\004\0225\n\rgroup_members"
-    "\030\003 \003(\0132\036.umsProtocol.GroupUserListItem\">"
-    "\n\030GetFriendBaseInfoRequest\022\017\n\007user_id\030\001 "
-    "\002(\004\022\021\n\tfriend_id\030\002 \003(\004\"t\n\016FriendListItem"
-    "\022\017\n\007user_id\030\001 \002(\004\022\021\n\tnick_name\030\002 \001(\t\022\021\n\t"
-    "avatar_id\030\003 \001(\r\022\016\n\006avatar\030\004 \001(\t\022\014\n\004sign\030"
-    "\005 \001(\t\022\r\n\005level\030\006 \001(\r\"\203\001\n\031GetFriendBaseIn"
-    "foResponse\022#\n\006result\030\001 \002(\0132\023.umsProtocol"
-    ".Result\022\017\n\007user_id\030\002 \001(\004\0220\n\013friend_item\030"
-    "\004 \003(\0132\033.umsProtocol.FriendListItem\":\n\025Ge"
-    "tGroupOptionRequest\022\017\n\007user_id\030\001 \002(\004\022\020\n\010"
-    "group_id\030\002 \002(\004\"\256\001\n\026GetGroupOptionRespons"
-    "e\022#\n\006result\030\001 \002(\0132\023.umsProtocol.Result\022\017"
-    "\n\007user_id\030\002 \001(\004\022\020\n\010group_id\030\003 \001(\004\022\023\n\013ver"
-    "ify_type\030\004 \001(\r\022\022\n\nchannel_id\030\005 \001(\004\022\020\n\010ms"
-    "g_mode\030\006 \001(\005\022\021\n\ttalk_mode\030\007 \001(\005\"<\n\027GetGr"
-    "oupUserCardRequest\022\017\n\007user_id\030\001 \002(\004\022\020\n\010g"
-    "roup_id\030\002 \002(\004\"\242\001\n\030GetGroupUserCardRespon"
-    "se\022#\n\006result\030\001 \002(\0132\023.umsProtocol.Result\022"
-    "\017\n\007user_id\030\002 \001(\004\022\020\n\010group_id\030\003 \001(\004\022\021\n\tni"
-    "ck_name\030\004 \001(\t\022\r\n\005phone\030\005 \001(\t\022\014\n\004mail\030\006 \001"
-    "(\t\022\016\n\006remark\030\007 \001(\t\"M\n\026SetGroupMsgModeReq"
-    "uest\022\017\n\007user_id\030\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\022"
-    "\020\n\010msg_mode\030\003 \002(\r\">\n\027SetGroupMsgModeResp"
-    "onse\022#\n\006result\030\001 \002(\0132\023.umsProtocol.Resul"
-    "t\"O\n\027SetGroupTalkModeRequest\022\017\n\007user_id\030"
-    "\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\022\021\n\ttalk_mode\030\003 \002"
-    "(\r\"\?\n\030SetGroupTalkModeResponse\022#\n\006result"
-    "\030\001 \002(\0132\023.umsProtocol.Result\"\?\n\032GetGroupM"
-    "anagerListRequest\022\017\n\007user_id\030\001 \002(\004\022\020\n\010gr"
-    "oup_id\030\002 \002(\004\"|\n\033GetGroupManagerListRespo"
-    "nse\022\020\n\010group_id\030\001 \001(\004\022\017\n\007sum_num\030\002 \001(\r\022\025"
-    "\n\rgroup_user_id\030\003 \003(\004\022#\n\006result\030\004 \002(\0132\023."
-    "umsProtocol.Result\"\030\n\026NotifyJoinGroupReq"
-    "uest\"\030\n\026NotifyExitGroupRequest\"6\n\035Notify"
-    "KickoutGroupUserRequest\022\025\n\radmin_user_id"
-    "\030\001 \002(\004\"R\n\034NotifySetGroupManagerRequest\022\033"
-    "\n\023super_admin_user_id\030\001 \002(\004\022\025\n\rcontrol_v"
-    "alue\030\002 \002(\r\"7\n\030NotifyDeleteGroupRequest\022\033"
-    "\n\023super_admin_user_id\030\001 \002(\004\"G\n\036NotifyUpd"
-    "ateGroupRemarkRequest\022\025\n\radmin_user_id\030\001"
-    " \002(\004\022\016\n\006remark\030\002 \001(\t\"{\n\034NotifyUpdateGrou"
-    "pInfoRequest\022\022\n\ngroup_name\030\001 \001(\t\022\016\n\006rema"
-    "rk\030\002 \001(\t\022\014\n\004type\030\003 \001(\r\022\023\n\013group_intro\030\004 "
-    "\001(\t\022\024\n\014group_notice\030\005 \001(\t\"I\n\036NotifyUpdat"
-    "eGroupOptionRequest\022\023\n\013verify_type\030\001 \001(\r"
-    "\022\022\n\nchannel_id\030\002 \001(\004\"0\n\036NotifyUpdateGrou"
-    "pNoticeRequest\022\016\n\006notice\030\001 \001(\t", 8990);
+    "sc\030\014 \001(\t\022\021\n\treal_name\030\r \001(\t\022\r\n\005token\030\016 \001"
+    "(\t\"=\n\026UpdateUserInfoResponse\022#\n\006result\030\001"
+    " \002(\0132\023.umsProtocol.Result\"6\n\025UpdateUserM"
+    "oodRequest\022\017\n\007user_id\030\001 \002(\004\022\014\n\004mood\030\002 \001("
+    "\t\"=\n\026UpdateUserMoodResponse\022#\n\006result\030\001 "
+    "\002(\0132\023.umsProtocol.Result\"\?\n\031UpdateUserNi"
+    "ckNameRequest\022\017\n\007user_id\030\001 \002(\004\022\021\n\tnick_n"
+    "ame\030\002 \001(\t\"A\n\032UpdateUserNickNameResponse\022"
+    "#\n\006result\030\001 \002(\0132\023.umsProtocol.Result\"I\n\023"
+    "UpdateAvatarRequest\022\017\n\007user_id\030\001 \002(\004\022\021\n\t"
+    "avatar_id\030\002 \001(\r\022\016\n\006avatar\030\003 \001(\t\";\n\024Updat"
+    "eAvatarResponse\022#\n\006result\030\001 \002(\0132\023.umsPro"
+    "tocol.Result\"<\n\027GetGroupUserInfoRequest\022"
+    "\020\n\010group_id\030\001 \002(\004\022\017\n\007user_id\030\002 \003(\004\"\210\001\n\030G"
+    "etGroupUserInfoResponse\022#\n\006result\030\001 \002(\0132"
+    "\023.umsProtocol.Result\022\020\n\010group_id\030\002 \001(\004\0225"
+    "\n\rgroup_members\030\003 \003(\0132\036.umsProtocol.Grou"
+    "pUserListItem\">\n\030GetFriendBaseInfoReques"
+    "t\022\017\n\007user_id\030\001 \002(\004\022\021\n\tfriend_id\030\002 \003(\004\"t\n"
+    "\016FriendListItem\022\017\n\007user_id\030\001 \002(\004\022\021\n\tnick"
+    "_name\030\002 \001(\t\022\021\n\tavatar_id\030\003 \001(\r\022\016\n\006avatar"
+    "\030\004 \001(\t\022\014\n\004sign\030\005 \001(\t\022\r\n\005level\030\006 \001(\r\"\203\001\n\031"
+    "GetFriendBaseInfoResponse\022#\n\006result\030\001 \002("
+    "\0132\023.umsProtocol.Result\022\017\n\007user_id\030\002 \001(\004\022"
+    "0\n\013friend_item\030\004 \003(\0132\033.umsProtocol.Frien"
+    "dListItem\":\n\025GetGroupOptionRequest\022\017\n\007us"
+    "er_id\030\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\"\256\001\n\026GetGro"
+    "upOptionResponse\022#\n\006result\030\001 \002(\0132\023.umsPr"
+    "otocol.Result\022\017\n\007user_id\030\002 \001(\004\022\020\n\010group_"
+    "id\030\003 \001(\004\022\023\n\013verify_type\030\004 \001(\r\022\022\n\nchannel"
+    "_id\030\005 \001(\004\022\020\n\010msg_mode\030\006 \001(\005\022\021\n\ttalk_mode"
+    "\030\007 \001(\005\"<\n\027GetGroupUserCardRequest\022\017\n\007use"
+    "r_id\030\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\"\242\001\n\030GetGrou"
+    "pUserCardResponse\022#\n\006result\030\001 \002(\0132\023.umsP"
+    "rotocol.Result\022\017\n\007user_id\030\002 \001(\004\022\020\n\010group"
+    "_id\030\003 \001(\004\022\021\n\tnick_name\030\004 \001(\t\022\r\n\005phone\030\005 "
+    "\001(\t\022\014\n\004mail\030\006 \001(\t\022\016\n\006remark\030\007 \001(\t\"M\n\026Set"
+    "GroupMsgModeRequest\022\017\n\007user_id\030\001 \002(\004\022\020\n\010"
+    "group_id\030\002 \002(\004\022\020\n\010msg_mode\030\003 \002(\r\">\n\027SetG"
+    "roupMsgModeResponse\022#\n\006result\030\001 \002(\0132\023.um"
+    "sProtocol.Result\"O\n\027SetGroupTalkModeRequ"
+    "est\022\017\n\007user_id\030\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\022\021"
+    "\n\ttalk_mode\030\003 \002(\r\"\?\n\030SetGroupTalkModeRes"
+    "ponse\022#\n\006result\030\001 \002(\0132\023.umsProtocol.Resu"
+    "lt\"\?\n\032GetGroupManagerListRequest\022\017\n\007user"
+    "_id\030\001 \002(\004\022\020\n\010group_id\030\002 \002(\004\"|\n\033GetGroupM"
+    "anagerListResponse\022\020\n\010group_id\030\001 \001(\004\022\017\n\007"
+    "sum_num\030\002 \001(\r\022\025\n\rgroup_user_id\030\003 \003(\004\022#\n\006"
+    "result\030\004 \002(\0132\023.umsProtocol.Result\"\030\n\026Not"
+    "ifyJoinGroupRequest\"\030\n\026NotifyExitGroupRe"
+    "quest\"6\n\035NotifyKickoutGroupUserRequest\022\025"
+    "\n\radmin_user_id\030\001 \002(\004\"R\n\034NotifySetGroupM"
+    "anagerRequest\022\033\n\023super_admin_user_id\030\001 \002"
+    "(\004\022\025\n\rcontrol_value\030\002 \002(\r\"7\n\030NotifyDelet"
+    "eGroupRequest\022\033\n\023super_admin_user_id\030\001 \002"
+    "(\004\"G\n\036NotifyUpdateGroupRemarkRequest\022\025\n\r"
+    "admin_user_id\030\001 \002(\004\022\016\n\006remark\030\002 \001(\t\"{\n\034N"
+    "otifyUpdateGroupInfoRequest\022\022\n\ngroup_nam"
+    "e\030\001 \001(\t\022\016\n\006remark\030\002 \001(\t\022\014\n\004type\030\003 \001(\r\022\023\n"
+    "\013group_intro\030\004 \001(\t\022\024\n\014group_notice\030\005 \001(\t"
+    "\"I\n\036NotifyUpdateGroupOptionRequest\022\023\n\013ve"
+    "rify_type\030\001 \001(\r\022\022\n\nchannel_id\030\002 \001(\004\"0\n\036N"
+    "otifyUpdateGroupNoticeRequest\022\016\n\006notice\030"
+    "\001 \001(\t", 9005);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "user_management_service.proto", &protobuf_RegisterTypes);
   Result::default_instance_ = new Result();
@@ -25050,6 +25052,7 @@ const int UpdateUserInfoRequest::kLikeFieldNumber;
 const int UpdateUserInfoRequest::kCityFieldNumber;
 const int UpdateUserInfoRequest::kPersonalDescFieldNumber;
 const int UpdateUserInfoRequest::kRealNameFieldNumber;
+const int UpdateUserInfoRequest::kTokenFieldNumber;
 #endif  // !_MSC_VER
 
 UpdateUserInfoRequest::UpdateUserInfoRequest()
@@ -25084,6 +25087,7 @@ void UpdateUserInfoRequest::SharedCtor() {
   city_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   personal_desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   real_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  token_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -25119,6 +25123,9 @@ void UpdateUserInfoRequest::SharedDtor() {
   }
   if (real_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete real_name_;
+  }
+  if (token_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete token_;
   }
   if (this != default_instance_) {
   }
@@ -25181,7 +25188,7 @@ void UpdateUserInfoRequest::Clear() {
     }
     constellation_ = 0u;
   }
-  if (_has_bits_[8 / 32] & 7936) {
+  if (_has_bits_[8 / 32] & 16128) {
     if (has_sign()) {
       if (sign_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         sign_->clear();
@@ -25205,6 +25212,11 @@ void UpdateUserInfoRequest::Clear() {
     if (has_real_name()) {
       if (real_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         real_name_->clear();
+      }
+    }
+    if (has_token()) {
+      if (token_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        token_->clear();
       }
     }
   }
@@ -25434,6 +25446,23 @@ bool UpdateUserInfoRequest::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(114)) goto parse_token;
+        break;
+      }
+
+      // optional string token = 14;
+      case 14: {
+        if (tag == 114) {
+         parse_token:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_token()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->token().data(), this->token().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "token");
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -25573,6 +25602,16 @@ void UpdateUserInfoRequest::SerializeWithCachedSizes(
       13, this->real_name(), output);
   }
 
+  // optional string token = 14;
+  if (has_token()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->token().data(), this->token().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "token");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      14, this->token(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -25702,6 +25741,17 @@ void UpdateUserInfoRequest::SerializeWithCachedSizes(
         13, this->real_name(), target);
   }
 
+  // optional string token = 14;
+  if (has_token()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->token().data(), this->token().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "token");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        14, this->token(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -25807,6 +25857,13 @@ int UpdateUserInfoRequest::ByteSize() const {
           this->real_name());
     }
 
+    // optional string token = 14;
+    if (has_token()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->token());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -25875,6 +25932,9 @@ void UpdateUserInfoRequest::MergeFrom(const UpdateUserInfoRequest& from) {
     if (from.has_real_name()) {
       set_real_name(from.real_name());
     }
+    if (from.has_token()) {
+      set_token(from.token());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -25912,6 +25972,7 @@ void UpdateUserInfoRequest::Swap(UpdateUserInfoRequest* other) {
     std::swap(city_, other->city_);
     std::swap(personal_desc_, other->personal_desc_);
     std::swap(real_name_, other->real_name_);
+    std::swap(token_, other->token_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -2,6 +2,7 @@
 #define __config_h__
 #include <string>
 #include "Singleton.h"
+#include "FileReader.h"
 
 struct config
 {
@@ -15,7 +16,8 @@ struct config
     int         m_hostport;
 	int         m_max_fds;
 	int         m_core_size;
-	UInt32         m_cmdThreadNum;
+	UInt32      m_cmdThreadNum;
+	vector< FILE_DATA_TYPES > m_rows;
 };
 
 typedef Singleton<config> gConfigPtr;
