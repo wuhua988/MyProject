@@ -88,7 +88,7 @@ public:
         makeOprCode();
         return m_dataString.str().data();
     }
-
+    string getCommand( void );
 private:
     std::stringstream m_dataString;		// 实现各种类型与 string 的互转。
     std::vector<string> m_param;			// 存放一次交互的参数个数
