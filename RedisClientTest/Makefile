@@ -33,6 +33,7 @@ rebuild: clean all
 
 clean:
 	rm -f *.o *.d
+	rm $(TARGET)
 show:
 	@echo $(SOURCES)
 	@echo $(OBJS)
